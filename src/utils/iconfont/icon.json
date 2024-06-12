@@ -1,0 +1,100 @@
+{
+  "id": "1422",
+  "name": "智绘阁图标库",
+  "font_family": "icon",
+  "css_prefix_text": "icon",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "147426",
+      "name": "问答知识库",
+      "font_class": "QA",
+      "unicode": "ea01",
+      "unicode_decimal": "59905"
+    },
+    {
+      "icon_id": "147424",
+      "name": "商品知识库",
+      "font_class": "merchandise",
+      "unicode": "ea02",
+      "unicode_decimal": "59906"
+    },
+    {
+      "icon_id": "147425",
+      "name": "系统管理",
+      "font_class": "system_management",
+      "unicode": "ea03",
+      "unicode_decimal": "59907"
+    },
+    {
+      "icon_id": "147443",
+      "name": "添加",
+      "font_class": "add",
+      "unicode": "ea04",
+      "unicode_decimal": "59908"
+    },
+    {
+      "icon_id": "147468",
+      "name": "AI",
+      "font_class": "AI",
+      "unicode": "ea05",
+      "unicode_decimal": "59909"
+    },
+    {
+      "icon_id": "147538",
+      "name": "修改",
+      "font_class": "edit",
+      "unicode": "ea06",
+      "unicode_decimal": "59910"
+    },
+    {
+      "icon_id": "147543",
+      "name": "店铺信息",
+      "font_class": "store",
+      "unicode": "ea07",
+      "unicode_decimal": "59911"
+    },
+    {
+      "icon_id": "147544",
+      "name": "账号信息",
+      "font_class": "user",
+      "unicode": "ea08",
+      "unicode_decimal": "59912"
+    },
+    {
+      "icon_id": "147551",
+      "name": "下载",
+      "font_class": "download",
+      "unicode": "ea09",
+      "unicode_decimal": "59913"
+    },
+    {
+      "icon_id": "147556",
+      "name": "Excel上传",
+      "font_class": "Excel",
+      "unicode": "ea0a",
+      "unicode_decimal": "59914"
+    },
+    {
+      "icon_id": "147557",
+      "name": "手动上传",
+      "font_class": "manual",
+      "unicode": "ea0b",
+      "unicode_decimal": "59915"
+    },
+    {
+      "icon_id": "147602",
+      "name": "空状态",
+      "font_class": "empty",
+      "unicode": "ea0c",
+      "unicode_decimal": "59916"
+    },
+    {
+      "icon_id": "147677",
+      "name": "更多",
+      "font_class": "more",
+      "unicode": "ea0d",
+      "unicode_decimal": "59917"
+    }
+  ]
+}
