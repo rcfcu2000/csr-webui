@@ -1,7 +1,5 @@
-// import { createRouter, createWebHistory } from 'vue-router'
 import { createRouter, createWebHashHistory } from 'vue-router'
-// import { Message } from "@arco-design/web-vue";
-let base = "/lmr/#"//线上
+let base = "/lmr"//线上
 // let base = ""//本地
 
 const routes = [{
@@ -101,20 +99,11 @@ const routes = [{
 ]
 
 const router = createRouter({
-    // history: createWebHistory(),
     history: createWebHashHistory(),
     routes,
 })
 // 路由守卫
 router.beforeEach((to, from, next) => {
-    // if (to.path != '/login') {
-    //     if (!sessionStorage.getItem('token')) {
-    //         Message.error('登陆已过期，请重新登录')
-    //         setTimeout(() => {
-    //             router.push('/login')
-    //         }, 1000)
-    //     }
-    // }
     next();
 })
 export default router
