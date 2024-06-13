@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-let base = "/lmr"//线上
-// let base = ""//本地
+// let base = "/lmr/#/"//线上
+let base = ""//本地
 
 const routes = [{
     path: base + '/',
