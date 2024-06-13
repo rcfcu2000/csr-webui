@@ -5,7 +5,7 @@ let base = "/lmr"//线上
 
 const routes = [{
     path: base + '/',
-    redirect: '/login',
+    redirect: base + '/login',
     meta: {
         title: '登录'
     },
