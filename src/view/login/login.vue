@@ -225,7 +225,6 @@ export default {
       if (res.code == 0) {
         sessionStorage.setItem("token", res.data.token);
         sessionStorage.setItem("userInfo", JSON.stringify(res.data.user));
-        sessionStorage.setItem("uuid", res.data.user.uuid);
         if (isPassword.value) {
           localStorage.setItem(
             "accountAndPassWord",
@@ -277,7 +276,6 @@ export default {
       let res = await updateShopInfo(shopInfoForm);
       if (res) {
         menu();
-        sessionStorage.setItem("shopInfo", JSON.stringify(res));
       }
     };
     // 取消创建
@@ -292,7 +290,6 @@ export default {
       };
       let res = await getShopInfo(params);
       if (res && res.nickName != "") {
-        sessionStorage.setItem("shopInfo", JSON.stringify(res));
         menu();
       } else {
         shopInfoForm.name = res.name;
@@ -308,9 +305,6 @@ export default {
       let res = await getUserInfo(params);
       if (res) {
         sessionStorage.setItem("userInfo", JSON.stringify(res.data.userInfo));
-        setTimeout(() => {
-          window.location.href = "/";
-        });
         menu();
       }
     };

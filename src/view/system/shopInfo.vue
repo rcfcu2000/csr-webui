@@ -265,7 +265,6 @@ export default {
         Message.success("修改成功");
         changeShopInfoModal.value = false;
         btnLoading.value = false;
-        sessionStorage.setItem("shopInfo", JSON.stringify(res));
       } else {
         btnLoading.value = false;
       }
@@ -297,19 +296,7 @@ export default {
     };
     onMounted(() => {
       getShopMainCategoryFn();
-      if (sessionStorage.getItem("shopInfo")) {
-        let list = JSON.parse(sessionStorage.getItem("shopInfo"));
-        shopInfo.brandAdvantage = list.brandAdvantage;
-        shopInfo.brandBelief = list.brandBelief;
-        shopInfo.brandManagement = list.brandManagement;
-        shopInfo.category = list.category;
-        shopInfo.ID = list.ID;
-        shopInfo.name = list.name;
-        shopInfo.nickname = list.nickName;
-        tags.push(...shopInfo.brandManagement.split(","));
-      } else {
-        getShopInfoFn();
-      }
+      getShopInfoFn();
     });
     return {
       shopId,

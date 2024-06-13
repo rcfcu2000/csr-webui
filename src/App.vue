@@ -15,7 +15,7 @@ export default {
 </script>
 
 <style lang='scss' >
-@import "./utils/main.scss";
+@import "./utils/main.css";
 * {
   margin: 0;
   padding: 0;

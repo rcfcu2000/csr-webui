@@ -11,7 +11,6 @@ export default createStore({
     mutations: {
         changeMenu(state, item) {
             state.selMenu = item
-            sessionStorage.setItem('breadcrumb', JSON.stringify(item))
         },
         // 插入后台数据返回的菜单值
         pushMenu(state, item) {

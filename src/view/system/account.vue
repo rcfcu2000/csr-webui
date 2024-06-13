@@ -198,7 +198,9 @@ export default {
     // 角色列表
     const roleList = reactive([]);
     //我的uuid
-    const uuid = sessionStorage.getItem("uuid");
+    const uuid = sessionStorage.getItem("userInfo")
+      ? JSON.parse(sessionStorage.getItem("userInfo")).uuid
+      : null;
     //表格全选
     const popupVisible = ref(false);
     //表格全选
