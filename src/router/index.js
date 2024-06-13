@@ -1,7 +1,7 @@
 // import { createRouter, createWebHistory } from 'vue-router'
 import { createRouter, createWebHashHistory } from 'vue-router'
 // import { Message } from "@arco-design/web-vue";
-let base = "/lmr"//线上
+let base = "/lmr/#"//线上
 // let base = ""//本地
 
 const routes = [{
