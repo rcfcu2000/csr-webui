@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import "../../../utils/iconfont/index.css";
@@ -38,8 +38,12 @@ export default {
   name: "asideIndex",
   setup() {
     const store = useStore();
-    const name = ref("橘子味的狸花猫");
-    const businessName = ref("蜡笔派家居旗舰店");
+    const name = sessionStorage.getItem("userInfo")
+      ? JSON.parse(sessionStorage.getItem("userInfo")).nickName
+      : "橘子味的狸花猫";
+    const businessName = sessionStorage.getItem("userInfo")
+      ? JSON.parse(sessionStorage.getItem("userInfo")).nickName.split(":")[0]
+      : "蜡笔派家居旗舰店";
     // 菜单栏
     const menuArr = computed(() => store.state.menu);
     const defaultSelectedKeys = computed(() => store.state.selMenu.son.ID);

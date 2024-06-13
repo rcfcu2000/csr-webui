@@ -355,10 +355,12 @@ export default {
         !sessionStorage.getItem("token") ||
         !sessionStorage.getItem("userInfo")
       ) {
-        let params = new URLSearchParams(window.location.search);
-        if (params && params.get("token")) {
-          sessionStorage.setItem("token", params.get("token"));
-          getUserInfoFn(decodeURIComponent(params.get("name")));
+        let hash = window.location.hash.substring(1).split("?")[1];
+        let params = new URLSearchParams(hash);
+        let hashParams = Object.fromEntries(params.entries());
+        if (hash && params && hashParams && hashParams.token) {
+          sessionStorage.setItem("token", hashParams.token);
+          getUserInfoFn(decodeURIComponent(hashParams.name));
         }
       } else {
         menu();
