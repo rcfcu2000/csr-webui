@@ -317,6 +317,10 @@ export default {
     const selTabs = ref(-1);
     // tabs总数
     const tabsAllNum = ref(0);
+    // 获取shopId
+    const shopId = sessionStorage.getItem("userInfo")
+      ? JSON.parse(sessionStorage.getItem("userInfo")).shopId
+      : 0;
 
     // 方法
     // 表格单选
@@ -489,7 +493,7 @@ export default {
           updatedBy: JSON.parse(sessionStorage.getItem("userInfo")).nickName
             ? JSON.parse(sessionStorage.getItem("userInfo")).nickName
             : "",
-          shopId: JSON.parse(sessionStorage.getItem("userInfo")).shopId,
+          shopId: shopId,
         };
         res = await updateList(params);
       } else if (knowledgeDeploymentTitle.value == "添加定制知识") {
@@ -501,7 +505,7 @@ export default {
           updatedBy: JSON.parse(sessionStorage.getItem("userInfo")).nickName
             ? JSON.parse(sessionStorage.getItem("userInfo")).nickName
             : "",
-          shopId: JSON.parse(sessionStorage.getItem("userInfo")).shopId,
+          shopId: shopId,
         };
         btnLoading.value = true;
         res = await addList(params);
@@ -561,7 +565,7 @@ export default {
         keyword: "2",
         page: 1,
         pageSize: 10000,
-        shopId: JSON.parse(sessionStorage.getItem("userInfo")).shopId,
+        shopId: shopId,
       };
       let res = await getList(params);
       if (res.code == 0) {
@@ -624,6 +628,7 @@ export default {
       getTabsFn();
     });
     return {
+      shopId,
       resArr,
       searchTableData,
       btnLoading,

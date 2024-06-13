@@ -176,6 +176,10 @@ export default {
     const modalSelTabs = ref();
     // 选中的当行数据中qa_types中的id
     const qa_types_ID = ref(null);
+    // 获取shopId
+    const shopId = sessionStorage.getItem("userInfo")
+      ? JSON.parse(sessionStorage.getItem("userInfo")).shopId
+      : 0;
 
     // 方法
     // 打开配置知识弹窗
@@ -244,7 +248,7 @@ export default {
         keyword: "1",
         page: 1,
         pageSize: 10000,
-        shopId: JSON.parse(sessionStorage.getItem("userInfo")).shopId,
+        shopId: shopId,
       };
       let res = await getList(params);
       if (res.code == 0) {
@@ -265,7 +269,7 @@ export default {
         updatedBy: JSON.parse(sessionStorage.getItem("userInfo")).nickName
           ? JSON.parse(sessionStorage.getItem("userInfo")).nickName
           : "",
-        shopId: JSON.parse(sessionStorage.getItem("userInfo")).shopId,
+        shopId: shopId,
       };
       if (qa_types_ID.value != lineValue.qa_types[0].ID) {
         params.qa_type = lineValue.qa_types;
@@ -338,6 +342,7 @@ export default {
       getTabsFn();
     });
     return {
+      shopId,
       resArr,
       searchTableData,
       selTabs,

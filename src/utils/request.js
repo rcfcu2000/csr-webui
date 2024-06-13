@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { Message } from "@arco-design/web-vue";
-// import router from '../router/index';
+import router from '../router/index';
 
 // 创建axios实例，设置配置得默认值
 const instance = axios.create({
     // baseUrl: 'http://192.168.2.8:8080',   // 本地地址
-    // baseUrl: 'https://www.zhihuige.cc/csrb',   // 线上地址
-    baseURL: 'https://www.zhihuige.cc/csrb',   // 打包地址
+    baseUrl: 'https://www.zhihuige.cc/csrb',   // 线上地址
+    // baseURL: 'https://www.zhihuige.cc/csrb',   // 打包地址
     timeout: 60000,  // 设置请求超时的默认值
     headers: {
         'Content-Type': 'application/json', //配置请求头
@@ -31,20 +31,22 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
     reponse => {
         const res = reponse.data
-        // if (reponse.config.url == '/admin/login' || reponse.config.url == '/imageCode') {
-        //     return res
-        // } else {
-        //     if (sessionStorage.getItem('token')) {
-        //         return res
-        //     } else {
-        //         router.push('/login')
-        //         return res
-        //     }
-        // }
-        return res
+        if (reponse.config.url == '/api/v1/base/login') {
+            return res
+        } else {
+            if (reponse.config.headers['x-token']) {
+                return res
+            } else {
+                Message.error('登陆已过期，请重新登录')
+                setTimeout(() => {
+                    router.push('/login')
+                }, 1000)
+            }
+        }
     },
     error => {
-        return Promise.reject(error)
+        // return Promise.reject(error)
+        Message.error(error)
     }
 )
 //封装post请求

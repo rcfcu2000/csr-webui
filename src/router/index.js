@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { Message } from "@arco-design/web-vue";
 
 const routes = [{
     path: '/',
@@ -102,15 +103,12 @@ const router = createRouter({
 })
 // 路由守卫
 router.beforeEach((to, from, next) => {
-
-    if (to.path === '/login') {
-        // 即将进入 login 页面 
-        //清除所有的 sessionStorage 缓存数据
-        // sessionStorage.clear();
-    } else {
+    if (to.path != '/login') {
         if (!sessionStorage.getItem('token')) {
-            router.push({ name: 'Login' })
-            sessionStorage.clear();
+            Message.error('登陆已过期，请重新登录')
+            setTimeout(() => {
+                router.push('/login')
+            }, 1000)
         }
     }
     next();

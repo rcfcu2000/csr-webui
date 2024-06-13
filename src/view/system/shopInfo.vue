@@ -215,11 +215,15 @@ export default {
     const tags = reactive([]);
     // 修改弹窗
     const changeShopInfoModal = ref(false);
+    // 获取shopId
+    const shopId = sessionStorage.getItem("userInfo")
+      ? JSON.parse(sessionStorage.getItem("userInfo")).shopId
+      : 0;
 
     // 方法
     const getShopInfoFn = async () => {
       let params = {
-        shopId: JSON.parse(sessionStorage.getItem("userInfo")).shopId,
+        shopId: shopId,
       };
       let res = await getShopInfo(params);
       if (res) {
@@ -308,6 +312,7 @@ export default {
       }
     });
     return {
+      shopId,
       categoryArr,
       fieldNames,
       categoryArr1,

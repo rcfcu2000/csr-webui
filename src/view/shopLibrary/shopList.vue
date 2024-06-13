@@ -775,6 +775,10 @@ export default {
     const resArr = reactive([]);
     // 搜索之后的数据
     const searchTableData = reactive([]);
+    // 获取shopId
+    const shopId = sessionStorage.getItem("userInfo")
+      ? JSON.parse(sessionStorage.getItem("userInfo")).shopId
+      : 0;
 
     // 方法
     // 清空弹窗内容
@@ -869,7 +873,7 @@ export default {
     };
     // 编辑提交
     const subEdit = async () => {
-      lineValue.shopId = JSON.parse(sessionStorage.getItem("userInfo")).shopId;
+      lineValue.shopId = shopId;
       let res = await editShop(lineValue);
       if (res.message == "Merchant deleted successfully" || res) {
         Message.success("修改成功");
@@ -1022,7 +1026,7 @@ export default {
       let params = {
         page: 1,
         pageSize: 10000,
-        shopId: JSON.parse(sessionStorage.getItem("userInfo")).shopId,
+        shopId: shopId,
       };
       let res = await getShopList(params);
       if (res.code == 0) {
@@ -1093,6 +1097,7 @@ export default {
       getShopListFn();
     });
     return {
+      shopId,
       searchTableData,
       isNone,
       resArr,
