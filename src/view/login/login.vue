@@ -305,6 +305,7 @@ export default {
       let res = await getUserInfo(params);
       if (res) {
         sessionStorage.setItem("userInfo", JSON.stringify(res.data.userInfo));
+        window.location.href = "/";
         menu();
       }
     };
