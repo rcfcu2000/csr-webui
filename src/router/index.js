@@ -1,15 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
 // import { Message } from "@arco-design/web-vue";
+let base = "/lmr"//线上
+// let base = ""//本地
 
 const routes = [{
-    path: '/',
+    path: base + '/',
     redirect: '/login',
     meta: {
         title: '登录'
     },
 },
 {
-    path: '/login',
+    path: base + '/login',
     name: 'Login',
     meta: {
         title: '登录'
@@ -17,70 +19,70 @@ const routes = [{
     component: () => import('../view/login/login.vue')
 },
 {
-    path: '/layout',
+    path: base + '/layout',
     name: 'Layout',
     meta: {
         title: '通用问答库'
     },
     component: () => import('../view/layout/index.vue'),
     children: [{
-        path: '',
+        path: base + '',
         name: 'Index',
         meta: {
             title: '通用问答库'
         },
         component: () => import('../view/knowledgeLibrary/general.vue'),
     }, {
-        path: '/index',
+        path: base + '/index',
         name: 'Index',
         meta: {
             title: '通用问答库'
         },
         component: () => import('../view/knowledgeLibrary/general.vue'),
     }, {
-        path: '/industry',
+        path: base + '/industry',
         name: 'Industry',
         meta: {
             title: '行业问答库'
         },
         component: () => import('../view/knowledgeLibrary/industry.vue'),
     }, {
-        path: '/diy',
+        path: base + '/diy',
         name: 'Diy',
         meta: {
             title: '自定义问答库'
         },
         component: () => import('../view/knowledgeLibrary/diy.vue'),
     }, {
-        path: '/shopList',
+        path: base + '/shopList',
         name: 'ShopList',
         meta: {
             title: '商品列表'
         },
         component: () => import('../view/shopLibrary/shopList.vue'),
     }, {
-        path: '/tagManager',
+        path: base + '/tagManager',
         name: 'TagManagement',
         meta: {
             title: '自定义问答库'
         },
         component: () => import('../view/shopLibrary/tagManager.vue'),
     }, {
-        path: '/account',
+        path: base + '/account',
         name: 'Account',
         meta: {
             title: '账号管理'
         },
         component: () => import('../view/system/account.vue'),
     }, {
-        path: '/role',
+        path: base + '/role',
         name: 'Role',
         meta: {
             title: '角色管理'
         },
         component: () => import('../view/system/role.vue'),
     }, {
-        path: '/shopInfo',
+        path: base + '/shopInfo',
         name: 'ShopInfo',
         meta: {
             title: '店铺信息'
@@ -88,7 +90,7 @@ const routes = [{
         component: () => import('../view/system/shopInfo.vue'),
     }],
 }, {
-    path: '/error',
+    path: base + '/error',
     name: 'Error',
     meta: {
         title: '账号无角色'
