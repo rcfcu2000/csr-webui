@@ -149,7 +149,7 @@ export default {
       qa_types: [
         {
           ID: null,
-          KbType: 2,
+          KbType: 1,
           QType: "",
           RefCount: 0,
         },
@@ -191,7 +191,7 @@ export default {
         lineValue.qa_types = [
           {
             ID: null,
-            KbType: 2,
+            KbType: 1,
             QType: "",
             RefCount: 0,
           },
@@ -260,7 +260,7 @@ export default {
       let params = {
         ID: lineValue.ID,
         answer: lineValue.Answer,
-        kbType: 2,
+        kbType: 1,
         question: lineValue.Question,
         updatedBy: JSON.parse(sessionStorage.getItem("userInfo")).nickName
           ? JSON.parse(sessionStorage.getItem("userInfo")).nickName

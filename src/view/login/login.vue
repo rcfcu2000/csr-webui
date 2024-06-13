@@ -158,7 +158,7 @@
 <script>
 import { onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import { login } from "../../api/login/login";
+import { login, getUserInfo } from "../../api/login/login";
 import { getUserMenu } from "../../api/menu/index";
 import {
   updateShopInfo,
@@ -300,6 +300,20 @@ export default {
         changeShopInfoModal.value = true;
       }
     };
+    // 获取用户信息
+    const getUserInfoFn = async (name) => {
+      let params = {
+        name,
+      };
+      let res = await getUserInfo(params);
+      if (res) {
+        sessionStorage.setItem("userInfo", JSON.stringify(res.data.userInfo));
+        setTimeout(() => {
+          window.location.href = "/";
+        });
+        menu();
+      }
+    };
     // 获取商户主营类目
     const getShopMainCategoryFn = async () => {
       categoryArr.length = 0;
@@ -343,7 +357,18 @@ export default {
       shopInfoForm.brandManagement = tags.join(",");
     };
     onMounted(() => {
-      // const currentURL = window.location.href;
+      if (
+        !sessionStorage.getItem("token") ||
+        !sessionStorage.getItem("userInfo")
+      ) {
+        let params = new URLSearchParams(window.location.search);
+        if (params && params.get("token")) {
+          sessionStorage.setItem("token", params.get("token"));
+          getUserInfoFn(decodeURIComponent(params.get("name")));
+        }
+      } else {
+        menu();
+      }
       if (localStorage.getItem("isPassWord") == "true") {
         isPassword.value = localStorage.getItem("isPassWord");
         let list = JSON.parse(localStorage.getItem("accountAndPassWord"));
@@ -370,6 +395,7 @@ export default {
       changeIsPassWord,
       createShopAccountFn,
       changeTag,
+      getUserInfoFn,
     };
   },
 };

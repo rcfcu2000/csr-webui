@@ -157,7 +157,7 @@
         >
           <a-option
             v-for="item in roleList"
-            :key="item.ID"
+            :key="item.authorityId"
             :value="item.authorityId"
             :label="item.authorityName"
           >
@@ -236,7 +236,7 @@ export default {
           num++;
         }
       });
-      if (num == tableData.length-1) {
+      if (num == tableData.length - 1) {
         checkedTableAll.value = true;
       } else {
         checkedTableAll.value = false;
@@ -273,7 +273,8 @@ export default {
     };
     // 编辑角色
     const editRole = (item) => {
-      changeRoleList.authorityId = item.authorityId;
+      changeRoleList.authorityId =
+        item.authorityId == 0 ? "" : item.authorityId;
       changeRoleList.authorityName = item.authorityName;
       lineId.value = item.ID;
       roleModel.value = true;
@@ -313,6 +314,7 @@ export default {
     };
     // 获取账号列表
     const getAccountFn = async () => {
+      tableData.length = 0;
       let params = {
         page: search.page,
         pageSize: search.pageSize,

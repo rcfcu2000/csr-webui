@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [{
     path: '/',
@@ -97,7 +97,7 @@ const routes = [{
 ]
 
 const router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     routes,
 })
 // 路由守卫
@@ -106,7 +106,7 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
         // 即将进入 login 页面 
         //清除所有的 sessionStorage 缓存数据
-        sessionStorage.clear();
+        // sessionStorage.clear();
     } else {
         if (!sessionStorage.getItem('token')) {
             router.push({ name: 'Login' })

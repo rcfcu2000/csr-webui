@@ -219,7 +219,7 @@ export default {
     // 方法
     const getShopInfoFn = async () => {
       let params = {
-        ID: JSON.parse(sessionStorage.getItem("userInfo")).shopId,
+        shopId: JSON.parse(sessionStorage.getItem("userInfo")).shopId,
       };
       let res = await getShopInfo(params);
       if (res) {
