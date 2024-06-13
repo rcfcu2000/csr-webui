@@ -34,7 +34,7 @@ instance.interceptors.response.use(
         if (reponse.config.url == '/api/v1/base/login') {
             return res
         } else {
-            if (reponse.config.headers['x-token']) {
+            if (reponse.config.headers['x-token'] || sessionStorage.getItem('token')) {
                 return res
             } else {
                 Message.error('登陆已过期，请重新登录')

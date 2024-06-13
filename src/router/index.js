@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { Message } from "@arco-design/web-vue";
+// import { Message } from "@arco-design/web-vue";
 
 const routes = [{
     path: '/',
@@ -103,14 +103,14 @@ const router = createRouter({
 })
 // 路由守卫
 router.beforeEach((to, from, next) => {
-    if (to.path != '/login') {
-        if (!sessionStorage.getItem('token')) {
-            Message.error('登陆已过期，请重新登录')
-            setTimeout(() => {
-                router.push('/login')
-            }, 1000)
-        }
-    }
+    // if (to.path != '/login') {
+    //     if (!sessionStorage.getItem('token')) {
+    //         Message.error('登陆已过期，请重新登录')
+    //         setTimeout(() => {
+    //             router.push('/login')
+    //         }, 1000)
+    //     }
+    // }
     next();
 })
 export default router
