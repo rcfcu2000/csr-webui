@@ -1,5 +1,4 @@
 const OSS = require('ali-oss');
-import { calculateHash } from "./crypto";
 let client = new OSS({
     region: 'oss-cn-hangzhou',
     accessKeyId: 'LTAI5t8W9w6KAcDJetS2ehaZ',
@@ -8,27 +7,24 @@ let client = new OSS({
 });
 export async function upload(file, address, suffix) {
     try {
-        let res = await calculateHash(file)
-        if (res) {
-            let fileName = `${address}${suffix}`
-            try {
-                await client.getObjectMeta(fileName);
-                // 文件存在，返回在线地址
-                return client.signatureUrl(fileName);
-            } catch (e) {
-                if (e.code === 'NoSuchKey') {
-                    // 文件不存在，上传文件
-                    let result = await client.put(fileName, file);
-                    if (result.res.status === 200) {
-                        // 文件上传成功，返回在线地址
-                        return client.signatureUrl(fileName);
-                    } else {
-                        // 文件上传失败
-                        console.log("上传失败");
-                    }
+        let fileName = `${address}${suffix}`
+        try {
+            await client.getObjectMeta(fileName);
+            // 文件存在，返回在线地址
+            return client.signatureUrl(fileName);
+        } catch (e) {
+            if (e.code === 'NoSuchKey') {
+                // 文件不存在，上传文件
+                let result = await client.put(fileName, file);
+                if (result.res.status === 200) {
+                    // 文件上传成功，返回在线地址
+                    return client.signatureUrl(fileName);
                 } else {
-                    throw e;
+                    // 文件上传失败
+                    console.log("上传失败");
                 }
+            } else {
+                throw e;
             }
         }
     } catch (e) {

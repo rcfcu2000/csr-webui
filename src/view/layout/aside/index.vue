@@ -1,4 +1,4 @@
-<!--  -->
+<!-- 右侧菜单栏 -->
 <template>
   <div class="index">
     <div class="title">
@@ -38,17 +38,23 @@ export default {
   name: "asideIndex",
   setup() {
     const store = useStore();
+    // 登陆人名称
     const name = sessionStorage.getItem("userInfo")
       ? JSON.parse(sessionStorage.getItem("userInfo")).nickName
       : "橘子味的狸花猫";
+    // 所属店铺
     const businessName = sessionStorage.getItem("userInfo")
       ? JSON.parse(sessionStorage.getItem("userInfo")).nickName.split(":")[0]
       : "蜡笔派家居旗舰店";
     // 菜单栏
     const menuArr = computed(() => store.state.menu);
+    // 选中的菜单
     const defaultSelectedKeys = computed(() => store.state.selMenu.son.ID);
+    // 初始化router
     const router = useRouter();
 
+    // 方法
+    // 跳转页面
     const toPage = (item) => {
       router.push({ name: item.path });
       defaultSelectedKeys.value = item.ID;

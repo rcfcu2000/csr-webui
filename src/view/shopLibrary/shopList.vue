@@ -432,7 +432,7 @@
     </template>
   </a-modal>
   <!-- AI上传 -->
-  <a-modal
+  <!-- <a-modal
     v-model:visible="AIRecognitionModel"
     :width="800"
     class="AIRecognitionModel"
@@ -483,9 +483,9 @@
         >
       </div>
     </template>
-  </a-modal>
+  </a-modal> -->
   <!-- AI上传队列 -->
-  <a-modal
+  <!-- <a-modal
     v-model:visible="AIListModel"
     :width="990"
     :footer="false"
@@ -530,7 +530,7 @@
         </template>
       </a-table>
     </div>
-  </a-modal>
+  </a-modal> -->
   <!-- excel上传 -->
   <a-modal v-model:visible="excelModel" :width="648" class="excelModel">
     <template #title>
@@ -682,56 +682,62 @@ export default {
     });
     // 内容视图
     const viewType = ref("0");
-    // ai识别列表数据
-    const AIRecognitionData = reactive([
-      {
-        imgs: [],
-        lastSubmissionTime: "2024-6-3 17:00:00",
-        state: "wait",
-      },
-      {
-        imgs: [],
-        lastSubmissionTime: "2024-6-3 17:00:00",
-        state: "wait",
-      },
-      {
-        imgs: [],
-        lastSubmissionTime: "2024-6-3 17:00:00",
-        state: "wait",
-      },
-    ]);
-    // ai识别列表表头
-    const AIRecognitionColumns = reactive([
-      {
-        title: "序号",
-        slotName: "serialNumber",
-        render: (data) => `${data.rowIndex + 1}`,
-        width: 60,
-      },
-      {
-        title: "商品详情图",
-        slotName: "imgs",
-        width: 470,
-      },
-      {
-        title: "最后提交时间",
-        dataIndex: "lastSubmissionTime",
-        width: 170,
-      },
-      {
-        title: "状态",
-        slotName: "state",
-        width: 100,
-      },
-      {
-        title: "操作",
-        slotName: "option",
-        fixed: "right",
-        width: 140,
-      },
-    ]);
-    // ai识别图片数组
-    const aiImgArr = reactive([]);
+    // // ai识别列表数据
+    // const AIRecognitionData = reactive([
+    //   {
+    //     imgs: [],
+    //     lastSubmissionTime: "2024-6-3 17:00:00",
+    //     state: "wait",
+    //   },
+    //   {
+    //     imgs: [],
+    //     lastSubmissionTime: "2024-6-3 17:00:00",
+    //     state: "wait",
+    //   },
+    //   {
+    //     imgs: [],
+    //     lastSubmissionTime: "2024-6-3 17:00:00",
+    //     state: "wait",
+    //   },
+    // ]);
+    // // ai识别列表表头
+    // const AIRecognitionColumns = reactive([
+    //   {
+    //     title: "序号",
+    //     slotName: "serialNumber",
+    //     render: (data) => `${data.rowIndex + 1}`,
+    //     width: 60,
+    //   },
+    //   {
+    //     title: "商品详情图",
+    //     slotName: "imgs",
+    //     width: 470,
+    //   },
+    //   {
+    //     title: "最后提交时间",
+    //     dataIndex: "lastSubmissionTime",
+    //     width: 170,
+    //   },
+    //   {
+    //     title: "状态",
+    //     slotName: "state",
+    //     width: 100,
+    //   },
+    //   {
+    //     title: "操作",
+    //     slotName: "option",
+    //     fixed: "right",
+    //     width: 140,
+    //   },
+    // ]);
+    // // ai识别图片数组
+    // const aiImgArr = reactive([]);
+    // //AI识别添加弹窗
+    // const AIRecognitionModel = ref(false);
+    // //AI识别列表弹窗
+    // const AIListModel = ref(false);
+    // //AI识别添加title
+    // const AIRecognitionTitle = ref("AI识别添加");
     // 商品参数数组
     const shopParameters = reactive([
       {
@@ -743,20 +749,14 @@ export default {
     const checkedTableAll = ref(false);
     //手动添加弹窗
     const artificialModel = ref(false);
-    //AI识别添加弹窗
-    const AIRecognitionModel = ref(false);
     //excel添加弹窗
     const excelModel = ref(false);
     // excel添加之后上传中的loading
     const excelLoadingModal = ref(false);
     // excel上传列表
     const excelList = reactive([]);
-    //AI识别列表弹窗
-    const AIListModel = ref(false);
     //弹窗详情title
     const artificialTitle = ref("添加商品");
-    //AI识别添加title
-    const AIRecognitionTitle = ref("AI识别添加");
     //弹窗按钮名称
     const modelBtnText = ref("确定添加");
     //搜索参数
@@ -798,8 +798,9 @@ export default {
         artificialTitle.value = type;
         artificialModel.value = true;
       } else if (type == "AI识别添加") {
-        AIRecognitionTitle.value = type;
-        AIRecognitionModel.value = true;
+        console.log('ai');
+        // AIRecognitionTitle.value = type;
+        // AIRecognitionModel.value = true;
       } else if (type == "Excel") {
         excelModel.value = true;
         excelList.length = 0;
@@ -891,8 +892,6 @@ export default {
         }
       }
     };
-    // 提交编辑/修改
-    const submit = () => {};
     // 上传商品图片
     const uploadShopImg = async (option) => {
       const { fileItem } = option;
@@ -939,17 +938,19 @@ export default {
         lineValue.merchantLinks[index].taobaoId = arr[1];
       }
     };
-    // ai上传图片
-    const uploadAIImg = (options) => {
-      const { fileItem } = options;
-      // let timestamp = Date.now();
-      // uploadImg(fileItem.file, `ai/yx/${timestamp}`, ".jpg");//yx为当前登陆人的名称/id
-      aiImgArr.push(fileItem);
-    };
-    // 打开ai识别列表弹窗
-    const openAiListModal = () => {
-      AIListModel.value = true;
-    };
+    // // ai上传图片
+    // const uploadAIImg = (options) => {
+    //   const { fileItem } = options;
+    //   // let timestamp = Date.now();
+    //   // uploadImg(fileItem.file, `ai/yx/${timestamp}`, ".jpg");//yx为当前登陆人的名称/id
+    //   aiImgArr.push(fileItem);
+    // };
+    // // 打开ai识别列表弹窗
+    // const openAiListModal = () => {
+    //   AIListModel.value = true;
+    // };
+    // // ai上传提交编辑/修改
+    // const submit = () => {};
     // 上传xlsx
     const uploadFile = (options) => {
       const { file } = options[0];
@@ -1103,17 +1104,17 @@ export default {
       detailModel,
       viewType,
       excelModel,
-      AIRecognitionData,
-      AIRecognitionColumns,
-      AIListModel,
-      aiImgArr,
-      AIRecognitionTitle,
+      // AIRecognitionData,
+      // AIRecognitionColumns,
+      // AIListModel,
+      // aiImgArr,
+      // AIRecognitionTitle,
+      // AIRecognitionModel,
       shopParameters,
       checkedTableAll,
       tableData,
       search,
       artificialModel,
-      AIRecognitionModel,
       artificialTitle,
       modelBtnText,
       excelLoadingModal,
@@ -1121,15 +1122,15 @@ export default {
       edit,
       del,
       allChecked,
-      submit,
       open,
       uploadShopImg,
       detail,
       addLinks,
       delLinks,
       isLink,
-      uploadAIImg,
-      openAiListModal,
+      // submit,
+      // uploadAIImg,
+      // openAiListModal,
       blurTextarea,
       download,
       checkedLine,
@@ -1717,7 +1718,7 @@ export default {
     }
   }
 }
-.AIRecognitionModel {
+/*.AIRecognitionModel {
   .title {
     font-size: 16px;
     font-weight: bold;
@@ -1819,7 +1820,7 @@ export default {
       padding: 0;
     }
   }
-}
+}*/
 .excelModel {
   .content {
     padding: 0 4px;

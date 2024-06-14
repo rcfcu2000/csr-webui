@@ -104,11 +104,15 @@ const router = createRouter({
 // 路由守卫
 router.beforeEach((to, from, next) => {
     if (to.path != '/login') {
+        // 判断页面是否含有token
         if (!sessionStorage.getItem('token')) {
             Message.error('登录已过期，请重新登录')
-            router.push('/login')
+            next('/login')
+        } else {
+            next()
         }
+    } else {
+        next();
     }
-    next();
 })
 export default router
