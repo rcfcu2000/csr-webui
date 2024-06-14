@@ -1,16 +1,15 @@
+import { Message } from '@arco-design/web-vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
-// let base = "/lmr/#/"//线上
-let base = ""//本地
 
 const routes = [{
-    path: base + '/',
-    redirect: base + '/login',
+    path: '/',
+    redirect: '/login',
     meta: {
         title: '登录'
     },
 },
 {
-    path: base + '/login',
+    path: '/login',
     name: 'Login',
     meta: {
         title: '登录'
@@ -18,70 +17,70 @@ const routes = [{
     component: () => import('../view/login/login.vue')
 },
 {
-    path: base + '/layout',
+    path: '/layout',
     name: 'Layout',
     meta: {
         title: '通用问答库'
     },
     component: () => import('../view/layout/index.vue'),
     children: [{
-        path: base + '',
+        path: '',
         name: 'Index',
         meta: {
             title: '通用问答库'
         },
         component: () => import('../view/knowledgeLibrary/general.vue'),
     }, {
-        path: base + '/index',
+        path: '/index',
         name: 'Index',
         meta: {
             title: '通用问答库'
         },
         component: () => import('../view/knowledgeLibrary/general.vue'),
     }, {
-        path: base + '/industry',
+        path: '/industry',
         name: 'Industry',
         meta: {
             title: '行业问答库'
         },
         component: () => import('../view/knowledgeLibrary/industry.vue'),
     }, {
-        path: base + '/diy',
+        path: '/diy',
         name: 'Diy',
         meta: {
             title: '自定义问答库'
         },
         component: () => import('../view/knowledgeLibrary/diy.vue'),
     }, {
-        path: base + '/shopList',
+        path: '/shopList',
         name: 'ShopList',
         meta: {
             title: '商品列表'
         },
         component: () => import('../view/shopLibrary/shopList.vue'),
     }, {
-        path: base + '/tagManager',
+        path: '/tagManager',
         name: 'TagManagement',
         meta: {
             title: '自定义问答库'
         },
         component: () => import('../view/shopLibrary/tagManager.vue'),
     }, {
-        path: base + '/account',
+        path: '/account',
         name: 'Account',
         meta: {
             title: '账号管理'
         },
         component: () => import('../view/system/account.vue'),
     }, {
-        path: base + '/role',
+        path: '/role',
         name: 'Role',
         meta: {
             title: '角色管理'
         },
         component: () => import('../view/system/role.vue'),
     }, {
-        path: base + '/shopInfo',
+        path: '/shopInfo',
         name: 'ShopInfo',
         meta: {
             title: '店铺信息'
@@ -89,7 +88,7 @@ const routes = [{
         component: () => import('../view/system/shopInfo.vue'),
     }],
 }, {
-    path: base + '/error',
+    path: '/error',
     name: 'Error',
     meta: {
         title: '账号无角色'
@@ -104,6 +103,12 @@ const router = createRouter({
 })
 // 路由守卫
 router.beforeEach((to, from, next) => {
+    if (to.path != '/login') {
+        if (!sessionStorage.getItem('token')) {
+            Message.error('登录已过期，请重新登录')
+            router.push('/login')
+        }
+    }
     next();
 })
 export default router

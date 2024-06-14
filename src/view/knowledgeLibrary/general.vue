@@ -244,6 +244,7 @@ export default {
     // 获取表格数据
     const getListFn = async () => {
       tableData.length = 0;
+      resArr.length = 0;
       let params = {
         keyword: "1",
         page: 1,

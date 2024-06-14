@@ -211,7 +211,6 @@
             type="warning"
             position="right"
             @ok="del('move', '')"
-            :popup-visible="popupVisible"
             v-if="viewType == '1'"
           >
             <a-button class="btn">删除选中项</a-button>
@@ -741,8 +740,6 @@ export default {
       },
     ]);
     //表格全选
-    const popupVisible = ref(false);
-    //表格全选
     const checkedTableAll = ref(false);
     //手动添加弹窗
     const artificialModel = ref(false);
@@ -1119,7 +1116,6 @@ export default {
       AIRecognitionModel,
       artificialTitle,
       modelBtnText,
-      popupVisible,
       excelLoadingModal,
       uploadFile,
       edit,

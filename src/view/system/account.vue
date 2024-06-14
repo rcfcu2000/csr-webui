@@ -5,9 +5,14 @@
   <div class="general">
     <div class="tableBox">
       <div class="top">
-        <div class="numIssue">共 {{ search.total }} 个用户</div>
+        <div class="numIssue">共 {{ search.total }} 个账号</div>
         <div class="right">
-          <a-input-search placeholder="搜索问题" class="input" />
+          <a-input-search
+            placeholder="搜索账号名称"
+            class="input"
+            v-model="search.nickName"
+            @press-enter="searchFn"
+          />
         </div>
       </div>
       <a-table :data="tableData" :pagination="false" class="table">
@@ -22,14 +27,26 @@
             </template>
           </a-table-column>
           <a-table-column
-            title="角色名称"
+            title="账号名称"
             data-index="nickName"
           ></a-table-column>
-          <a-table-column
-            title="所属角色"
-            data-index="authority.authorityName"
-          ></a-table-column>
+          <a-table-column title="所属角色" data-index="authority.authorityName">
+            <template #cell="{ record }">
+              <div v-if="record.authority.authorityName == ''">-</div>
+              <div v-else>{{ record.authority.authorityName }}</div>
+            </template>
+          </a-table-column>
           <a-table-column title="创建时间" data-index="CreatedAt">
+          </a-table-column>
+          <a-table-column title="账号状态" data-index="enable">
+            <template #cell="{ record }">
+              <div v-if="record.enable == 1" class="enable">
+                <span style="background: #00b42a"></span>正常
+              </div>
+              <div v-if="record.enable != 1">
+                <span style="background: #f53f3f"></span>已停用
+              </div>
+            </template>
           </a-table-column>
           <a-table-column title="操作" data-index="option">
             <template #cell="{ record }">
@@ -55,7 +72,7 @@
                 >修改所属角色</a-button
               >
               <a-popconfirm
-                content="删除之后不可恢复，确定要删除吗？"
+                content="停用后可重新启用，确认要停用吗？"
                 type="warning"
                 position="tr"
                 @ok="del('only', record.ID)"
@@ -65,11 +82,18 @@
                   type="text"
                   class="btn"
                   style="color: #ff1600"
-                  @click="openDel('only')"
+                  v-if="uuid != record.uuid && record.enable == 1"
                 >
-                  删除
+                  停用
                 </a-button>
               </a-popconfirm>
+              <a-button
+                type="text"
+                class="btn"
+                @click="editRole(record)"
+                v-if="uuid != record.uuid && record.enable != 1"
+                >启用</a-button
+              >
             </template>
           </a-table-column>
         </template>
@@ -80,18 +104,19 @@
             >全选</a-checkbox
           >
           <a-popconfirm
-            content="确定要删除吗?"
+            content="确定要停用吗?"
             type="warning"
             position="right"
             @ok="del('move', '')"
-            :popup-visible="popupVisible"
           >
-            <a-button class="btn" @click="openDel('move')">删除选中项</a-button>
+            <a-button class="btn">停用选中项</a-button>
           </a-popconfirm>
         </div>
         <a-pagination
           :total="search.total"
-          v-model:page-size="search.pageSize"
+          :page-size="search.pageSize"
+          @page-size-change="changePageSize"
+          @change="changePage"
           show-total
           show-jumper
           show-page-size
@@ -184,6 +209,9 @@ import {
 } from "../../api/system/account";
 import { getRole } from "../../api/system/role";
 import { formDate } from "../../utils/public";
+import { fuzzySearch } from "../../utils/public";
+import { Message } from "@arco-design/web-vue";
+
 export default {
   name: "diyPage",
   setup() {
@@ -202,8 +230,6 @@ export default {
       ? JSON.parse(sessionStorage.getItem("userInfo")).uuid
       : null;
     //表格全选
-    const popupVisible = ref(false);
-    //表格全选
     const checkedTableAll = ref(false);
     //修改密码弹窗
     const passwordModel = ref(false);
@@ -217,7 +243,8 @@ export default {
     const search = reactive({
       total: 0,
       page: 1,
-      pageSize: 10,
+      pageSize: 20,
+      nickName: "",
     });
     // 修改密码参数
     const passWord = reactive({
@@ -226,6 +253,14 @@ export default {
     });
     //表格数据
     const tableData = reactive([]);
+    // 后台返回数据
+    const resArr = reactive([]);
+    // 搜索之后的数据
+    const searchTableData = reactive([]);
+    // 获取shopId
+    const shopId = sessionStorage.getItem("userInfo")
+      ? JSON.parse(sessionStorage.getItem("userInfo")).shopId
+      : 0;
 
     // 方法
 
@@ -287,19 +322,21 @@ export default {
         id,
       };
       if (type == "move") {
-        popupVisible.value = false;
+        let arr = [];
+        tableData.forEach((item) => {
+          if (item.isChecked) {
+            arr.push(item.ID);
+          }
+        });
+        if (arr.length == 0) {
+          Message.error("请先选择停用项！");
+          return;
+        }
       } else if (type == "only") {
         let res = await delAccount(params);
         if (res.code == 0) {
           getAccountFn();
-          popupVisible.value = false;
         }
-      }
-    };
-    // 删除选中项
-    const openDel = (type) => {
-      if (type == "move") {
-        console.log(type);
       }
     };
     // 提交编辑/修改所属角色
@@ -317,18 +354,24 @@ export default {
     // 获取账号列表
     const getAccountFn = async () => {
       tableData.length = 0;
+      resArr.length = 0;
       let params = {
-        page: search.page,
-        pageSize: search.pageSize,
+        page: 1,
+        pageSize: 10000,
+        shopId: shopId,
       };
       let res = await getAccount(params);
       if (res.code == 0) {
-        search.total = res.data.total;
-        tableData.push(...res.data.list);
-        tableData.forEach((item) => {
+        resArr.push(...res.data.list);
+        resArr.forEach((item) => {
           item.CreatedAt = formDate(item.CreatedAt, "2");
           item.isChecked = false;
         });
+        search.total = res.data.total;
+        tableData.length = 0;
+        tableData.push(...resArr.slice(0, search.pageSize));
+      } else {
+        Message.error("页面加载失败，请稍后重试");
       }
     };
     // 获取所有角色列表
@@ -347,11 +390,57 @@ export default {
         }
       }
     };
+    // 列表搜索查询
+    const searchFn = () => {
+      tableData.length = 0;
+      searchTableData.length = 0;
+      if (search.nickName != "") {
+        searchTableData.push(
+          ...fuzzySearch(resArr, "nickName", search.nickName)
+        );
+        tableData.push(...searchTableData);
+        if (searchTableData.length > 0) {
+          changePageSize(search.pageSize);
+          search.total = searchTableData.length;
+        } else {
+          search.total = 0;
+        }
+      } else {
+        changePageSize(search.pageSize);
+        search.total = resArr.length;
+      }
+    };
+    // 分页数量变化
+    const changePageSize = (num) => {
+      search.pageSize = num;
+      tableData.length = 0;
+      search.page = 1;
+      if (searchTableData.length == 0) {
+        tableData.push(...resArr.slice(0, search.pageSize));
+      } else {
+        tableData.push(...searchTableData.slice(0, search.pageSize));
+      }
+    };
+    // 分页页码变化
+    const changePage = (num) => {
+      search.page = num;
+      let arr = searchTableData.length == 0 ? resArr : searchTableData;
+      tableData.length = 0;
+      if (num == 1) {
+        tableData.push(...arr.slice(0, search.pageSize));
+      } else {
+        let first = (num - 1) * search.pageSize;
+        tableData.push(...arr.slice(first, first + search.pageSize));
+      }
+    };
     onMounted(() => {
       getAccountFn();
       getRoleList();
     });
     return {
+      shopId,
+      resArr,
+      searchTableData,
       lineId,
       changeRoleList,
       roleList,
@@ -364,17 +453,18 @@ export default {
       roleModel,
       modelTitle,
       modelBtnText,
-      popupVisible,
       changePassword,
       del,
       allChecked,
       editRole,
       changeRole,
-      openDel,
       getAccountFn,
       subChangePassword,
       getRoleList,
       checkedLine,
+      searchFn,
+      changePageSize,
+      changePage,
     };
   },
 };
@@ -438,6 +528,17 @@ export default {
         padding: 0;
         margin-right: 15px;
         color: var(--main-btnBackgroundColor);
+      }
+      .enable {
+        display: flex;
+        align-items: center;
+        span {
+          display: block;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          margin-right: 8px;
+        }
       }
       ::v-deep .arco-table-header,
       ::v-deep .arco-table-container {

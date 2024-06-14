@@ -53,12 +53,7 @@
                 @ok="del('only', record.authorityId)"
                 v-if="record.authorityId != '888'"
               >
-                <a-button
-                  type="text"
-                  class="btn"
-                  style="color: #ff1600"
-                  @click="openDel('only')"
-                >
+                <a-button type="text" class="btn" style="color: #ff1600">
                   删除
                 </a-button>
               </a-popconfirm>
@@ -76,15 +71,15 @@
             type="warning"
             position="right"
             @ok="del('move', '')"
-            :popup-visible="popupVisible"
           >
-            <a-button class="btn" @click="openDel('move')">删除选中项</a-button>
+            <a-button class="btn">删除选中项</a-button>
           </a-popconfirm>
         </div>
         <a-pagination
           :total="search.total"
           v-model:page-size="search.pageSize"
-          :change="changePage"
+          @page-size-change="changePageSize"
+          @change="changePage"
           show-total
           show-jumper
           show-page-size
@@ -92,6 +87,7 @@
       </div>
     </div>
   </div>
+  <!-- 配置权限 -->
   <a-modal v-model:visible="jurisdictionModel" :width="800" class="model">
     <template #title>
       <div class="title">分配权限</div>
@@ -178,6 +174,7 @@ import {
   flattenChildren,
   formDate,
 } from "../../utils/public";
+import { Message } from "@arco-design/web-vue";
 
 export default {
   name: "diyPage",
@@ -189,8 +186,6 @@ export default {
     const lineId = ref();
     // 所有菜单列表
     const menuList = reactive([]);
-    //删除选中项flag
-    const popupVisible = ref(false);
     //表格全选
     const checkedTableAll = ref(false);
     //分权弹窗
@@ -222,6 +217,12 @@ export default {
     });
     //表格数据
     const tableData = reactive([]);
+    // 后台返回数据
+    const resArr = reactive([]);
+    // 获取shopId
+    const shopId = sessionStorage.getItem("userInfo")
+      ? JSON.parse(sessionStorage.getItem("userInfo")).shopId
+      : 0;
     // 分配权限当行选中的内容
     const selJurisdictionArr = ref([]);
 
@@ -282,23 +283,12 @@ export default {
         authorityId: id,
       };
       if (type == "move") {
-        popupVisible.value = false;
+        console.log(123);
       } else if (type == "only") {
         let res = await delRole(params);
         if (res.code == 0) {
           getRoleFn();
-          popupVisible.value = false;
         }
-      }
-    };
-    // 删除选中项
-    const openDel = (type) => {
-      if (type == "move") {
-        // if (selectedKeys.value.length > 0) {
-        //   popupVisible.value = true;
-        // } else {
-        //   popupVisible.value = false;
-        // }
       }
     };
     // 提交编辑/修改角色
@@ -361,23 +351,31 @@ export default {
     };
     // 获取角色列表
     const getRoleFn = async () => {
+      tableData.length = 0;
+      resArr.length = 0;
       let params = {
-        page: search.page,
-        pageSize: search.pageSize,
+        page: 1,
+        pageSize: 1000,
+        shopId: shopId,
       };
       let res = await getRole(params);
       if (res.code == 0) {
-        search.total = res.data.total;
-        tableData.push(...res.data.list);
-        tableData.forEach((item) => {
+        resArr.push(...res.data.list);
+        resArr.forEach((item) => {
           delete item.children;
-          item.isChecked = false;
           item.CreatedAt = formDate(item.CreatedAt, "2");
+          item.isChecked = false;
         });
+        search.total = res.data.total;
+        tableData.length = 0;
+        tableData.push(...resArr.slice(0, search.pageSize));
+      } else {
+        Message.error("页面加载失败，请稍后重试");
       }
     };
     // 获取所有菜单
     const getMenuFn = async () => {
+      menuList.length = 0;
       let params = {
         page: 1,
         pageSize: 100,
@@ -406,21 +404,52 @@ export default {
       let res = await getAssignUserMenu(params);
       if (res.code == 0) {
         if (res.data.menus) {
-          menuList.push(...updateCheckedStatus(menuList, res.data.menus));
+          const recoverMenuArr = recoverMenu(menuList);
+          const arr = updateCheckedStatus(recoverMenuArr, res.data.menus);
+          menuList.length = 0;
+          menuList.push(...arr);
+        } else {
+          getMenuFn();
         }
         jurisdictionModel.value = true;
       }
     };
-    // 分页
+    // 将菜单所有的ischecked变为false
+    const recoverMenu = (arr) => {
+      const res = arr;
+      res.forEach((item) => {
+        item.isChecked = false;
+        if (item.children && item.children.length > 0) {
+          recoverMenu(item.children);
+        }
+      });
+      return res;
+    };
+    // 分页数量变化
+    const changePageSize = (num) => {
+      search.pageSize = num;
+      tableData.length = 0;
+      search.page = 1;
+      tableData.push(...resArr.slice(0, search.pageSize));
+    };
+    // 分页页码变化
     const changePage = (num) => {
       search.page = num;
-      getRoleFn();
+      tableData.length = 0;
+      if (num == 1) {
+        tableData.push(...resArr.slice(0, search.pageSize));
+      } else {
+        let first = (num - 1) * search.pageSize;
+        tableData.push(...resArr.slice(first, first + search.pageSize));
+      }
     };
     onMounted(() => {
       getRoleFn();
       getMenuFn();
     });
     return {
+      resArr,
+      shopId,
       roleName,
       lineId,
       menuList,
@@ -432,14 +461,12 @@ export default {
       modelTitle,
       form,
       modelBtnText,
-      popupVisible,
       selJurisdictionArr,
       openJurisdiction,
       del,
       allChecked,
       editRole,
       changeRole,
-      openDel,
       open,
       changeCheckedAll,
       checkedJurisdiction,
@@ -450,6 +477,8 @@ export default {
       allMenuFn,
       checkedLine,
       changePage,
+      changePageSize,
+      recoverMenu,
     };
   },
 };

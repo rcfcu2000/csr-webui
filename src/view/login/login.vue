@@ -156,7 +156,7 @@
 </template>
 
 <script>
-import { onMounted, reactive, ref } from "vue";
+import { onMounted,reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { login, getUserInfo } from "../../api/login/login";
 import { getUserMenu } from "../../api/menu/index";
@@ -350,27 +350,30 @@ export default {
     const blurTag = () => {
       shopInfoForm.brandManagement = tags.join(",");
     };
+
+
+    // 页面初始化加载
     onMounted(() => {
-      if (
-        !sessionStorage.getItem("token") ||
-        !sessionStorage.getItem("userInfo")
-      ) {
-        let hash = window.location.hash.substring(1).split("?")[1];
-        let params = new URLSearchParams(hash);
-        let hashParams = Object.fromEntries(params.entries());
-        if (hash && params && hashParams && hashParams.token) {
-          sessionStorage.setItem("token", hashParams.token);
-          getUserInfoFn(decodeURIComponent(hashParams.name));
-        }
-      } else {
-        menu();
+    if (
+      !sessionStorage.getItem("token") ||
+      !sessionStorage.getItem("userInfo")
+    ) {
+      let hash = window.location.hash.substring(1).split("?")[1];
+      let params = new URLSearchParams(hash);
+      let hashParams = Object.fromEntries(params.entries());
+      if (hash && params && hashParams && hashParams.token) {
+        sessionStorage.setItem("token", hashParams.token);
+        getUserInfoFn(decodeURIComponent(hashParams.name));
       }
-      if (localStorage.getItem("isPassWord") == "true") {
-        isPassword.value = localStorage.getItem("isPassWord");
-        let list = JSON.parse(localStorage.getItem("accountAndPassWord"));
-        form.name = list.name;
-        form.password = list.password;
-      }
+    } else {
+      menu();
+    }
+    if (localStorage.getItem("isPassWord") == "true") {
+      isPassword.value = localStorage.getItem("isPassWord");
+      let list = JSON.parse(localStorage.getItem("accountAndPassWord"));
+      form.name = list.name;
+      form.password = list.password;
+    }
     });
     return {
       categoryArr1,
