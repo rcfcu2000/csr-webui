@@ -156,7 +156,7 @@
 </template>
 
 <script>
-import { onMounted,reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { login, getUserInfo } from "../../api/login/login";
 import { getUserMenu } from "../../api/menu/index";
@@ -235,7 +235,7 @@ export default {
         }
         if (res.data.user.shopId) {
           getShopMainCategoryFn();
-          getShopInfoFn(res.data.user.shopId);
+          menu();
         } else {
           changeShopInfoModal.value = true;
         }
@@ -254,6 +254,7 @@ export default {
           parent: foundItem,
           son: foundItem.children[0],
         };
+        getShopInfoFn(JSON.parse(sessionStorage.getItem("userInfo")).shopId);
         store.commit("pushMenu", res.data.menus);
         store.commit("changeMenu", list);
         sessionStorage.setItem("menu", JSON.stringify(res.data.menus));
@@ -290,7 +291,11 @@ export default {
       };
       let res = await getShopInfo(params);
       if (res && res.nickName != "") {
-        menu();
+        if (sessionStorage.getItem("userInfo")) {
+          let userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+          userInfo.shopName = res.name;
+          sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
+        }
       } else {
         shopInfoForm.name = res.name;
         shopInfoForm.ID = res.ID;
@@ -351,29 +356,28 @@ export default {
       shopInfoForm.brandManagement = tags.join(",");
     };
 
-
     // 页面初始化加载
     onMounted(() => {
-    if (
-      !sessionStorage.getItem("token") ||
-      !sessionStorage.getItem("userInfo")
-    ) {
-      let hash = window.location.hash.substring(1).split("?")[1];
-      let params = new URLSearchParams(hash);
-      let hashParams = Object.fromEntries(params.entries());
-      if (hash && params && hashParams && hashParams.token) {
-        sessionStorage.setItem("token", hashParams.token);
-        getUserInfoFn(decodeURIComponent(hashParams.name));
+      if (
+        !sessionStorage.getItem("token") ||
+        !sessionStorage.getItem("userInfo")
+      ) {
+        let hash = window.location.hash.substring(1).split("?")[1];
+        let params = new URLSearchParams(hash);
+        let hashParams = Object.fromEntries(params.entries());
+        if (hash && params && hashParams && hashParams.token) {
+          sessionStorage.setItem("token", hashParams.token);
+          getUserInfoFn(decodeURIComponent(hashParams.name));
+        }
+      } else {
+        menu();
       }
-    } else {
-      menu();
-    }
-    if (localStorage.getItem("isPassWord") == "true") {
-      isPassword.value = localStorage.getItem("isPassWord");
-      let list = JSON.parse(localStorage.getItem("accountAndPassWord"));
-      form.name = list.name;
-      form.password = list.password;
-    }
+      if (localStorage.getItem("isPassWord") == "true") {
+        isPassword.value = localStorage.getItem("isPassWord");
+        let list = JSON.parse(localStorage.getItem("accountAndPassWord"));
+        form.name = list.name;
+        form.password = list.password;
+      }
     });
     return {
       categoryArr1,

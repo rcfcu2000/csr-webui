@@ -43,9 +43,11 @@ export default {
       ? JSON.parse(sessionStorage.getItem("userInfo")).nickName
       : "橘子味的狸花猫";
     // 所属店铺
-    const businessName = sessionStorage.getItem("userInfo")
-      ? JSON.parse(sessionStorage.getItem("userInfo")).nickName.split(":")[0]
-      : "蜡笔派家居旗舰店";
+    const businessName =
+      sessionStorage.getItem("userInfo") &&
+      JSON.parse(sessionStorage.getItem("userInfo")).shopName
+        ? JSON.parse(sessionStorage.getItem("userInfo")).shopName
+        : "蜡笔派家居旗舰店";
     // 菜单栏
     const menuArr = computed(() => store.state.menu);
     // 选中的菜单
