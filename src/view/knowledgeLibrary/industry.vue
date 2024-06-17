@@ -28,7 +28,7 @@
       </a-tabs>
       <div class="right">
         <a-input-search
-          placeholder="搜索问题"
+          placeholder="搜索知识内容"
           class="input"
           v-model="search.Answer"
           @press-enter="searchFn"

@@ -15,7 +15,7 @@
           />
         </div>
       </div>
-      <a-table :data="tableData" :pagination="false" class="table">
+      <a-table :data="tableData" :pagination="false" :sticky-header="100" class="table">
         <template #columns>
           <a-table-column :width="50">
             <template #cell="{ record }">
