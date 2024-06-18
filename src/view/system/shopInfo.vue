@@ -96,8 +96,8 @@
           <div class="text">店铺昵称</div>
         </div>
         <a-input
-          placeholder="请输入店铺名称"
-          v-model="shopInfo.nickname"
+          placeholder="请输入店铺昵称"
+          v-model="shopInfo.nickName"
           class="input"
         />
       </div>
@@ -209,7 +209,7 @@ export default {
         parentId: 0,
       }, //主营类目
       name: "", //店铺名称
-      nickname: "", //店铺昵称
+      nickName: "", //店铺昵称
     });
     // tag临时存储
     const tags = reactive([]);
@@ -233,7 +233,7 @@ export default {
         shopInfo.category = res.category;
         shopInfo.ID = res.ID;
         shopInfo.name = res.name;
-        shopInfo.nickname = res.nickname;
+        shopInfo.nickName = res.nickName;
         tags.push(...shopInfo.brandManagement.split(","));
       }
     };
@@ -259,6 +259,14 @@ export default {
     };
     // 提交修改店铺信息
     const subShopInfo = async () => {
+      if (shopInfo.nickName == "") {
+        Message.error("店铺昵称不能为空");
+        return;
+      }
+      if (shopInfo.category.Name == "") {
+        Message.error("主营类目不能为空");
+        return;
+      }
       btnLoading.value = true;
       let res = await updateShopInfo(shopInfo);
       if (res) {

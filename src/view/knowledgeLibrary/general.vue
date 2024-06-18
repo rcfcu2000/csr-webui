@@ -132,6 +132,7 @@ import {
   updateList,
 } from "../../api/knowledgeLibrary/knowledgeBase";
 import { fuzzySearch, groupingSearch } from "../../utils/public";
+import { Message } from "@arco-design/web-vue";
 
 export default {
   name: "generalPage",
@@ -262,6 +263,10 @@ export default {
     };
     // 修改列表数据
     const subKnowledgeBase = async () => {
+      if (lineValue.Answer == "") {
+        Message.error("知识内容不能为空");
+        return;
+      }
       let params = {
         ID: lineValue.ID,
         answer: lineValue.Answer,

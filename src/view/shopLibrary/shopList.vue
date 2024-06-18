@@ -798,7 +798,7 @@ export default {
         artificialTitle.value = type;
         artificialModel.value = true;
       } else if (type == "AI识别添加") {
-        console.log('ai');
+        console.log("ai");
         // AIRecognitionTitle.value = type;
         // AIRecognitionModel.value = true;
       } else if (type == "Excel") {
@@ -871,6 +871,14 @@ export default {
     };
     // 编辑提交
     const subEdit = async () => {
+      if (lineValue.name == "") {
+        Message.error("商品名称不能为空");
+        return;
+      }
+      if (lineValue.merchantLinks.length == 0) {
+        Message.error("商品链接不能为空");
+        return;
+      }
       lineValue.shopId = shopId;
       let res = await editShop(lineValue);
       if (res.message == "Merchant deleted successfully" || res) {
@@ -976,9 +984,10 @@ export default {
         // 创建一个 FormData 对象来发送文件
         const formData = new FormData();
         formData.append("file", blob, excelList[0].name);
+        let shopId = JSON.parse(sessionStorage.getItem("userInfo")).shopId;
 
         const response = await axios.post(
-          "https://www.zhihuige.cc/csrb/api/v1/merchant/upload",
+          `https://www.zhihuige.cc/csrb/api/v1/merchant/upload?shopId=${shopId}`,
           formData,
           {
             headers: {
@@ -992,6 +1001,9 @@ export default {
           Message.success("上传成功");
           excelLoadingModal.value = false;
           getShopListFn();
+        } else {
+          Message.error("上传失败，请稍后重试");
+          excelLoadingModal.value = false;
         }
       };
     };

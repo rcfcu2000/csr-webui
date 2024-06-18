@@ -168,7 +168,10 @@
     </template>
     <div class="content">
       <div class="item">
-        <div class="lable">知识类别</div>
+        <div class="lable">
+          <div class="icon">*</div>
+          知识类别
+        </div>
         <div class="value" v-if="knowledgeDeploymentTitle == '修改定制知识'">
           {{ lineValue.Question }}
         </div>
@@ -445,6 +448,10 @@ export default {
     };
     // 新增tabs
     const subTabs = async () => {
+      if (qa_types.QType == "") {
+        Message.error("分组名称不能为空");
+        return;
+      }
       let params = {
         KbType: 2,
         QType: qa_types.QType,
@@ -483,6 +490,14 @@ export default {
     const subKnowledgeBase = async () => {
       let params = {};
       let res;
+      if (lineValue.Question == "") {
+        Message.error("知识类别不能为空");
+        return;
+      }
+      if (lineValue.Answer == "") {
+        Message.error("知识内容不能为空");
+        return;
+      }
       if (knowledgeDeploymentTitle.value == "修改定制知识") {
         params = {
           ID: lineValue.ID,
@@ -902,10 +917,13 @@ export default {
       .textarea {
         font-size: 14px;
         margin-top: 8px;
-        background-color: var(--main-backgroundColor);
       }
       ::v-deep .arco-textarea {
         min-height: 300px;
+        background-color: var(--main-backgroundColor);
+        &:hover {
+          background-color: var(--main-btnHoverColor);
+        }
       }
       ::v-deep .arco-textarea-wrapper {
         background-color: var(--main-btnHoverColor);

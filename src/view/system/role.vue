@@ -133,6 +133,7 @@
       </div>
     </template>
   </a-modal>
+  <!-- 添加角色 -->
   <a-modal v-model:visible="roleModel" :width="400" class="model">
     <template #title>
       <div class="title">{{ modelTitle }}</div>
@@ -293,6 +294,10 @@ export default {
     };
     // 提交编辑/修改角色
     const changeRole = async () => {
+      if (roleName.value == "") {
+        Message.error("角色名称不能为空");
+        return;
+      }
       let params = {
         AuthorityId: lineId.value,
         authorityName: roleName.value,
