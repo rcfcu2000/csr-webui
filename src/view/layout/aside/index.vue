@@ -5,20 +5,37 @@
       <img src="../../../image/logo.png" class="logo" />
     </div>
     <div class="menu">
-      <a-menu :default-selected-keys="[defaultSelectedKeys]" :auto-open="true">
-        <a-sub-menu v-for="item in menuArr" :key="item.ID">
-          <template #title>{{ item.meta.title }}</template>
-          <template #icon
-            ><div :class="item.meta.icon + ' icon'"></div
-          ></template>
-          <a-menu-item
-            v-for="item1 in item.children"
-            :key="item1.ID"
-            @click="toPage(item1)"
-          >
-            {{ item1.meta.title }}
-          </a-menu-item>
-        </a-sub-menu>
+      <a-menu
+        :default-selected-keys="[defaultSelectedKeys]"
+        :auto-open="true"
+        :accordion="true"
+        :auto-open-selected="true"
+      >
+        <template v-for="item in menuArr" :key="item.ID">
+          <template v-if="item.children && item.children.length > 0">
+            <a-sub-menu :key="item.ID">
+              <template #title>{{ item.meta.title }}</template>
+              <template #icon
+                ><div :class="item.meta.icon + ' icon'"></div
+              ></template>
+              <a-menu-item
+                v-for="item1 in item.children"
+                :key="item1.ID"
+                @click="toPage(item1)"
+              >
+                {{ item1.meta.title }}
+              </a-menu-item>
+            </a-sub-menu>
+          </template>
+          <template v-else>
+            <a-menu-item @click="toPage(item)" :key="item.ID">
+              <template #icon>
+                <div :class="item.meta.icon + ' icon'"></div>
+              </template>
+              {{ item.meta.title }}
+            </a-menu-item>
+          </template>
+        </template>
       </a-menu>
     </div>
     <div class="loginInfo">
@@ -51,7 +68,11 @@ export default {
     // 菜单栏
     const menuArr = computed(() => store.state.menu);
     // 选中的菜单
-    const defaultSelectedKeys = computed(() => store.state.selMenu.son.ID);
+    const defaultSelectedKeys = computed(() =>
+      store.state.selMenu.son && store.state.selMenu.son.ID
+        ? store.state.selMenu.son.ID
+        : store.state.selMenu.parent.ID
+    );
     // 初始化router
     const router = useRouter();
 
@@ -64,16 +85,25 @@ export default {
     };
     // 找到该级的title以及父级的title，目前只适用于两层
     const findNodeAndParentName = (targetId, item) => {
-      menuArr.value.forEach((item1) => {
-        if (item1.ID == targetId) {
-          let list = {
-            parent: item1,
-            son: item,
-          };
-          store.commit("changeMenu", list);
-          sessionStorage.setItem("selMenu", JSON.stringify(list));
-        }
-      });
+      if (targetId == "0") {
+        let list = {
+          parent: item,
+          son: {},
+        };
+        store.commit("changeMenu", list);
+        sessionStorage.setItem("selMenu", JSON.stringify(list));
+      } else {
+        menuArr.value.forEach((item1) => {
+          if (item1.ID == targetId) {
+            let list = {
+              parent: item1,
+              son: item,
+            };
+            store.commit("changeMenu", list);
+            sessionStorage.setItem("selMenu", JSON.stringify(list));
+          }
+        });
+      }
     };
     return {
       name,
@@ -89,7 +119,7 @@ export default {
 <style lang='scss' scoped>
 .index {
   position: absolute;
-  width: 200px;
+  width: 212px;
   height: 100vh;
   top: 0;
   left: 0;
@@ -111,6 +141,7 @@ export default {
   .menu {
     width: 100%;
     height: calc(100vh - 200px);
+    overflow-y: auto;
     ::v-deep .arco-menu-selected {
       color: var(--main-btnBackgroundColor) !important;
       background-color: #e7f0ff !important;

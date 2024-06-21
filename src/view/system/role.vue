@@ -26,6 +26,11 @@
           </a-table-column>
           <a-table-column title="角色名称" data-index="authorityName">
           </a-table-column>
+          <a-table-column title="已关联账号量" data-index="authorityName">
+            <template #cell="{ record }">
+              <div v-if="record.authorityName">0</div>
+            </template>
+          </a-table-column>
           <a-table-column
             title="创建时间"
             data-index="CreatedAt"

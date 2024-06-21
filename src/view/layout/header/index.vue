@@ -3,9 +3,11 @@
   <div class="index">
     <div class="title">当前位置</div>
     <a-breadcrumb class="breadcrumb">
-      <a-breadcrumb-item v-for="(item, index) in breadcrumb" :key="index">
-        {{ item.meta.title }}
-      </a-breadcrumb-item>
+      <template v-for="(item, index) in breadcrumb" :key="index">
+        <a-breadcrumb-item v-if="item && item.meta">
+          {{ item.meta.title }}
+        </a-breadcrumb-item>
+      </template>
     </a-breadcrumb>
   </div>
 </template>
@@ -26,7 +28,7 @@ export default {
 </script>
 <style lang='scss' scoped>
 .index {
-  width: calc(100% - 200px);
+  width: calc(100% - 212px);
   height: 90px;
   position: absolute;
   right: 0;

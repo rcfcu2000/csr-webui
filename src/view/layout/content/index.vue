@@ -17,7 +17,7 @@ export default {
 </script>
 <style lang='scss' scoped>
 .index {
-  width: calc(100% - 200px);
+  width: calc(100% - 212px);
   height: calc(100vh - 90px);
   position: absolute;
   right: 0;

@@ -97,7 +97,19 @@
             <div v-else>暂无数据</div>
           </template>
         </a-table-column>
-        <a-table-column title="操作" data-index="option" :width="150">
+        <a-table-column title="状态" data-index="Enable" width="100">
+          <template #cell="{ record }">
+            <div v-if="record.Enable == '1'" class="status">
+              <span style="background: #00b42a"></span>
+              正常
+            </div>
+            <div v-if="record.Enable != '1'" class="status">
+              <span style="background: #f53f3f"></span>
+              已停用
+            </div>
+          </template>
+        </a-table-column>
+        <a-table-column title="操作" data-index="option" :width="250">
           <template #cell="{ record }">
             <a-button type="text" class="btn" @click="changeLine(record)">
               配置知识
@@ -116,6 +128,29 @@
                 删除
               </a-button>
             </a-popconfirm>
+            <a-popconfirm
+              content="停用后可重新启用，确认要停用吗？"
+              type="warning"
+              position="tr"
+              @ok="changeStatus(record)"
+            >
+              <a-button
+                type="text"
+                class="btn"
+                style="color: #ff1600"
+                v-if="record.Enable == '1'"
+              >
+                停用
+              </a-button>
+            </a-popconfirm>
+            <a-button
+              type="text"
+              class="btn"
+              v-if="record.Enable != '1'"
+              @click="changeStatus(record)"
+            >
+              启用
+            </a-button>
           </template>
         </a-table-column>
       </template>
@@ -214,9 +249,9 @@
         <a-button class="sub" @click="subKnowledgeBase" :loading="btnLoading">
           {{ knowledgeDeploymentBtn }}
         </a-button>
-        <a-button class="cancel" @click="knowledgeDeploymentModal = false"
-          >取消</a-button
-        >
+        <a-button class="cancel" @click="knowledgeDeploymentModal = false">
+          取消
+        </a-button>
       </div>
     </template>
   </a-modal>
@@ -289,6 +324,7 @@ export default {
     const lineValue = reactive({
       ID: "",
       Question: "",
+      Enable: "1",
       Answer: "",
       qa_types: [
         {
@@ -372,6 +408,7 @@ export default {
       knowledgeDeploymentBtn.value = "保存";
       lineValue.ID = "";
       lineValue.Question = "";
+      lineValue.Enable = "1";
       lineValue.Answer = "";
       lineValue.qa_types = [
         {
@@ -392,6 +429,7 @@ export default {
       lineValue.ID = item.ID;
       lineValue.Question = item.Question;
       lineValue.Answer = item.Answer;
+      lineValue.Enable = item.Enable;
       if (item.qa_types.length > 0) {
         lineValue.qa_types = item.qa_types;
         modalSelTabs.value = item.qa_types[0].QType;
@@ -503,6 +541,7 @@ export default {
           ID: lineValue.ID,
           qa_types: lineValue.qa_types,
           answer: lineValue.Answer,
+          Enable: lineValue.Enable,
           kbType: 2,
           question: lineValue.Question,
           updatedBy: JSON.parse(sessionStorage.getItem("userInfo")).nickName
@@ -521,6 +560,7 @@ export default {
             ? JSON.parse(sessionStorage.getItem("userInfo")).nickName
             : "",
           shopId: shopId,
+          Enable: "1",
         };
         btnLoading.value = true;
         res = await addList(params);
@@ -532,6 +572,21 @@ export default {
         btnLoading.value = false;
       } else {
         btnLoading.value = false;
+      }
+    };
+
+    // 修改自动回复状态
+    const changeStatus = async (item) => {
+      let params = {
+        ID: item.ID,
+        Enable: item.Enable == "1" ? "0" : "1",
+      };
+      let res = await updateList(params);
+      if (res) {
+        Message.success("修改成功");
+        getListFn();
+      } else {
+        Message.error("修改失败,请稍后重试");
       }
     };
     // 新增列表数据选择分组
@@ -663,6 +718,7 @@ export default {
       knowledgeDeploymentBtn,
       tabsBtn,
       loading,
+      changeStatus,
       getTabsFn,
       getListFn,
       tabsChange,
@@ -799,6 +855,21 @@ export default {
     left: 24px;
     right: 24px;
     bottom: 80px;
+    .status {
+      display: flex;
+      align-items: center;
+      span {
+        display: block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+    }
+    .btn {
+      padding: 0;
+      margin-right: 15px;
+    }
     ::v-deep .arco-table-header,
     ::v-deep .arco-table-container {
       border-radius: 0 0 0 0 !important;

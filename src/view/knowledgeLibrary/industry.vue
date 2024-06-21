@@ -35,7 +35,12 @@
         />
       </div>
     </div>
-    <a-table :data="tableData" class="table" :pagination="false">
+    <a-table
+      :data="tableData"
+      class="table"
+      :pagination="false"
+      :sticky-header="100"
+    >
       <template #columns>
         <a-table-column
           title="知识类别"
@@ -51,10 +56,45 @@
             <div v-else>暂无数据</div>
           </template>
         </a-table-column>
+        <a-table-column title="状态" data-index="Enable" width="100">
+          <template #cell="{ record }">
+            <div v-if="record.Enable == '1'" class="status">
+              <span style="background: #00b42a"></span>
+              正常
+            </div>
+            <div v-if="record.Enable != '1'" class="status">
+              <span style="background: #f53f3f"></span>
+              已停用
+            </div>
+          </template>
+        </a-table-column>
         <a-table-column title="操作" data-index="option" :width="150">
           <template #cell="{ record }">
             <a-button type="text" class="btn" @click="changeLine(record)">
               配置知识
+            </a-button>
+            <a-popconfirm
+              content="停用后可重新启用，确认要停用吗？"
+              type="warning"
+              position="tr"
+              @ok="changeStatus(record)"
+            >
+              <a-button
+                type="text"
+                class="btn"
+                style="color: #ff1600"
+                v-if="record.Enable == '1'"
+              >
+                停用
+              </a-button>
+            </a-popconfirm>
+            <a-button
+              type="text"
+              class="btn"
+              v-if="record.Enable != '1'"
+              @click="changeStatus(record)"
+            >
+              启用
             </a-button>
           </template>
         </a-table-column>
@@ -134,7 +174,6 @@ import {
 import { fuzzySearch, groupingSearch } from "../../utils/public";
 import { Message } from "@arco-design/web-vue";
 
-
 export default {
   name: "generalPage",
   setup() {
@@ -207,12 +246,14 @@ export default {
     };
     // tabs发生变化
     const tabsChange = (num) => {
-      selTabs.value = num;
+      if (num !== "") {
+        selTabs.value = num;
+      }
       tableData.length = 0;
       searchTableData.length = 0;
-      if (num != -1) {
+      if (selTabs.value != -1) {
         searchTableData.push(
-          ...groupingSearch(resArr, "QType", tabsArr[num].QType)
+          ...groupingSearch(resArr, "QType", tabsArr[selTabs.value].QType)
         );
         tableData.push(...searchTableData);
         if (searchTableData.length > 0) {
@@ -246,6 +287,7 @@ export default {
     // 获取表格数据
     const getListFn = async () => {
       tableData.length = 0;
+      resArr.length = 0;
       let params = {
         keyword: "3",
         page: 1,
@@ -302,6 +344,21 @@ export default {
         }
       });
     };
+
+    // 修改自动回复状态
+    const changeStatus = async (item) => {
+      let params = {
+        ID: item.ID,
+        Enable: item.Enable == "1" ? "0" : "1",
+      };
+      let res = await updateList(params);
+      if (res) {
+        Message.success("修改成功");
+        getListFn();
+      } else {
+        Message.error("修改失败,请稍后重试");
+      }
+    };
     // 列表搜索查询
     const searchFn = () => {
       tableData.length = 0;
@@ -316,8 +373,12 @@ export default {
           search.total = 0;
         }
       } else {
-        changePageSize(search.pageSize);
-        search.total = resArr.length;
+        if (selTabs.value !== -1) {
+          tabsChange("");
+        } else {
+          changePageSize(search.pageSize);
+          search.total = resArr.length;
+        }
       }
     };
     // 分页数量变化
@@ -360,6 +421,7 @@ export default {
       lineValue,
       modalSelTabs,
       qa_types_ID,
+      changeStatus,
       getTabsFn,
       getListFn,
       tabsChange,
@@ -429,6 +491,21 @@ export default {
     left: 24px;
     right: 24px;
     bottom: 80px;
+    .status {
+      display: flex;
+      align-items: center;
+      span {
+        display: block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+    }
+    .btn {
+      padding: 0;
+      margin-right: 15px;
+    }
     ::v-deep .arco-table-header,
     ::v-deep .arco-table-container {
       border-radius: 0 0 0 0 !important;

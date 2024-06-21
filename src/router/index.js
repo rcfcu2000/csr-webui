@@ -59,10 +59,17 @@ const routes = [{
         },
         component: () => import('../view/shopLibrary/shopList.vue'),
     }, {
+        path: '/size',
+        name: 'Size',
+        meta: {
+            title: '尺码表管理'
+        },
+        component: () => import('../view/shopLibrary/size.vue'),
+    }, {
         path: '/tagManager',
         name: 'TagManagement',
         meta: {
-            title: '自定义问答库'
+            title: '标签管理'
         },
         component: () => import('../view/shopLibrary/tagManager.vue'),
     }, {
@@ -86,6 +93,20 @@ const routes = [{
             title: '店铺信息'
         },
         component: () => import('../view/system/shopInfo.vue'),
+    }, {
+        path: '/reply',
+        name: 'Reply',
+        meta: {
+            title: '关键字触发'
+        },
+        component: () => import('../view/reply/reply.vue'),
+    }, {
+        path: '/greeting',
+        name: 'Greeting',
+        meta: {
+            title: '欢迎语'
+        },
+        component: () => import('../view/reply/greeting.vue'),
     }],
 }, {
     path: '/error',

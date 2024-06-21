@@ -51,6 +51,13 @@
         <div class="value">{{ shopInfo.name }}</div>
       </div>
       <div class="item">
+        <div class="name">店铺昵称</div>
+        <div class="value">
+          <div class="placeholder" v-if="shopInfo.nickName == ''">暂未填写</div>
+          <div class="text" v-else>{{ shopInfo.nickName }}</div>
+        </div>
+      </div>
+      <div class="item">
         <div class="name">主营类目</div>
         <div class="value">
           <div>{{ shopInfo.category.Name }}</div>

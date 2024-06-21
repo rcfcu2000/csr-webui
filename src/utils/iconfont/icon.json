@@ -7,8 +7,8 @@
   "glyphs": [
     {
       "icon_id": "147426",
-      "name": "问答知识库",
-      "font_class": "QA",
+      "name": "自动回复",
+      "font_class": "Auto_reply",
       "unicode": "ea01",
       "unicode_decimal": "59905"
     },
@@ -95,6 +95,20 @@
       "font_class": "more",
       "unicode": "ea0d",
       "unicode_decimal": "59917"
+    },
+    {
+      "icon_id": "147678",
+      "name": "权限",
+      "font_class": "access",
+      "unicode": "ea0e",
+      "unicode_decimal": "59918"
+    },
+    {
+      "icon_id": "150878",
+      "name": "店铺知识库",
+      "font_class": "store_knowledge",
+      "unicode": "ea0f",
+      "unicode_decimal": "59919"
     }
   ]
 }
