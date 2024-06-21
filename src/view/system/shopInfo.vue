@@ -346,8 +346,8 @@ export default {
   .account {
     width: 600px;
   }
-  .shop {
-    margin-top: 52px;
+  .account {
+    margin-bottom: 52px;
   }
   .title {
     display: flex;

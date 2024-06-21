@@ -246,23 +246,34 @@ export default {
           align-items: center;
           justify-content: space-between;
           .date {
+            flex-shrink: 0;
             display: flex;
             align-items: center;
             color: var(--main-fontColor3);
             font-size: 12px;
             .text {
               margin-left: 8px;
+              width: 100%;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
           }
-          .edit,
-          .del {
-            font-size: 16px;
-            color: var(--main-btnBackgroundColor);
-            cursor: pointer;
-          }
-          .del {
-            color: #f53f3f;
-            margin-left: 16px;
+          .btns {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            .edit,
+            .del {
+              flex-shrink: 0;
+              font-size: 16px;
+              color: var(--main-btnBackgroundColor);
+              cursor: pointer;
+            }
+            .del {
+              color: #f53f3f;
+              margin-left: 16px;
+            }
           }
         }
       }

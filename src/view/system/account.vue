@@ -15,7 +15,12 @@
           />
         </div>
       </div>
-      <a-table :data="tableData" :pagination="false" :sticky-header="100" class="table">
+      <a-table
+        :data="tableData"
+        :pagination="false"
+        :sticky-header="100"
+        class="table"
+      >
         <template #columns>
           <a-table-column :width="50">
             <template #cell="{ record }">
@@ -208,7 +213,7 @@ import {
   delAccount,
 } from "../../api/system/account";
 import { getRole } from "../../api/system/role";
-import { fuzzySearch,formDate } from "../../utils/public";
+import { fuzzySearch, formDate } from "../../utils/public";
 import { Message } from "@arco-design/web-vue";
 
 export default {

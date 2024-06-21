@@ -69,6 +69,7 @@
       </div>
     </div>
     <a-table
+     :sticky-header="100"
       :data="tableData"
       class="table"
       :pagination="false"
