@@ -102,11 +102,11 @@
     </template>
     <div class="content">
       <div class="item">
-        <div class="lable">触发关键字</div>
+        <div class="label">触发关键字</div>
         <div class="value">{{ lineValue.Question }}</div>
       </div>
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="icon">*</div>
           回复内容
         </div>
@@ -145,7 +145,7 @@ export default {
       total: 0,
       page: 1,
       pageSize: 20,
-      Auestion: "",
+      Question: "",
     });
     // 选中的当行数据
     const lineValue = reactive({
@@ -195,6 +195,10 @@ export default {
     };
     // 保存修改
     const sub = async () => {
+      if (lineValue.Answer == "") {
+        Message.error("回复内容不能为空");
+        return;
+      }
       let res = await updateReply(lineValue);
       if (res) {
         Message.success("配置成功");
@@ -444,7 +448,7 @@ export default {
     padding: 0 4px;
     .item {
       margin-bottom: 24px;
-      .lable {
+      .label {
         color: var(--main-fontColor2);
         font-weight: bold;
         display: flex;

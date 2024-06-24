@@ -5,8 +5,8 @@ import router from '../router/index';
 // 创建axios实例，设置配置得默认值
 const instance = axios.create({
     // baseUrl: 'http://192.168.2.8:8080',   // 本地地址
-    // baseUrl: 'https://www.zhihuige.cc/csrb',   // 线上地址
-    baseURL: 'https://www.zhihuige.cc/csrb',   // 打包地址
+    baseUrl: 'https://www.zhihuige.cc/csrb',   // 线上地址
+    // baseURL: 'https://www.zhihuige.cc/csrb',   // 打包地址
     timeout: 60000,  // 设置请求超时的默认值
     headers: {
         'Content-Type': 'application/json', //配置请求头

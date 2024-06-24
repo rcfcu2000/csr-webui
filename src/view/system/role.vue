@@ -104,7 +104,7 @@
     </template>
     <div class="content">
       <div class="item" v-for="item in menuList" :key="item.id">
-        <div class="lable">{{ item.meta.title }}</div>
+        <div class="label">{{ item.meta.title }}</div>
         <div class="valueModel" v-for="item1 in item.children" :key="item1.id">
           <a-checkbox class="left" v-model="item1.isChecked">{{
             item1.meta.title
@@ -150,7 +150,7 @@
     </template>
     <div class="content">
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="icon">*</div>
           <div class="text">角色名称</div>
         </div>
@@ -643,7 +643,7 @@ export default {
     .item {
       width: 100%;
       margin-bottom: 24px;
-      .lable {
+      .label {
         color: var(--main-fontColor2);
         font-weight: bold;
         display: flex;

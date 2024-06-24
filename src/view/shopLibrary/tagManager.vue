@@ -79,7 +79,7 @@
     </template>
     <div class="content">
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="icon">*</div>
           <div class="text">标签名称</div>
         </div>
@@ -90,7 +90,7 @@
         />
       </div>
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="icon">*</div>
           <div class="text">标签说明</div>
         </div>
@@ -452,7 +452,7 @@ export default {
     .item {
       width: 100%;
       margin-bottom: 24px;
-      .lable {
+      .label {
         color: var(--main-fontColor2);
         font-weight: bold;
         display: flex;

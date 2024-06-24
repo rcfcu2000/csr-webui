@@ -204,7 +204,7 @@
     </template>
     <div class="content">
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="icon">*</div>
           知识类别
         </div>
@@ -219,7 +219,7 @@
         />
       </div>
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="icon">*</div>
           知识内容
         </div>
@@ -232,7 +232,7 @@
         />
       </div>
       <div class="item">
-        <div class="lable">所属分组</div>
+        <div class="label">所属分组</div>
         <a-select
           placeholder="请选择所属分组"
           v-model="modalSelTabs"
@@ -965,7 +965,7 @@ export default {
     padding: 0 4px;
     .item {
       margin-bottom: 24px;
-      .lable {
+      .label {
         color: var(--main-fontColor2);
         font-weight: bold;
         display: flex;

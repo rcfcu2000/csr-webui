@@ -248,7 +248,7 @@
       </a-alert>
       <div class="itemGather">
         <div class="item">
-          <div class="lable">
+          <div class="label">
             <div class="icon">*</div>
             <div class="text">商品简称</div>
           </div>
@@ -259,7 +259,7 @@
           />
         </div>
         <div class="item">
-          <div class="lable">
+          <div class="label">
             <div class="text">商品封面图</div>
           </div>
           <a-upload :custom-request="uploadShopImg" :show-file-list="false">
@@ -277,7 +277,7 @@
         </div>
       </div>
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="icon">*</div>
           <div class="text">商品链接</div>
         </div>
@@ -309,7 +309,7 @@
         </div>
       </div>
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="text">商品信息</div>
         </div>
         <a-textarea
@@ -321,7 +321,7 @@
       </div>
       <!-- <div class="itemGather">
         <div class="item">
-          <div class="lable">
+          <div class="label">
             <div class="text">商品系列</div>
           </div>
           <a-input
@@ -331,7 +331,7 @@
           />
         </div>
         <div class="item">
-          <div class="lable">
+          <div class="label">
             <div class="text">商品标签</div>
           </div>
           <a-select placeholder="请输入商品标签" multiple>
@@ -341,27 +341,27 @@
         </div>
       </div>
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="text">商品参数</div>
         </div>
         <div class="itemSub">
-          <div class="lableSub">材质：</div>
+          <div class="labelSub">材质：</div>
           <a-input placeholder="请输入材质" class="input input3" allow-clear />
         </div>
         <div class="itemSub">
-          <div class="lableSub">尺寸：</div>
+          <div class="labelSub">尺寸：</div>
           <a-input placeholder="请输入尺寸" class="input input3" allow-clear />
         </div>
         <div class="itemSub">
-          <div class="lableSub">风格：</div>
+          <div class="labelSub">风格：</div>
           <a-input placeholder="请输入风格" class="input input3" allow-clear />
         </div>
         <div class="itemSub">
-          <div class="lableSub">功能：</div>
+          <div class="labelSub">功能：</div>
           <a-input placeholder="请输入功能" class="input input3" allow-clear />
         </div>
         <div class="itemSub">
-          <div class="lableSub">适用空间：</div>
+          <div class="labelSub">适用空间：</div>
           <a-input
             placeholder="请输入适用空间"
             class="input input3"
@@ -369,11 +369,11 @@
           />
         </div>
         <div class="itemSub">
-          <div class="lableSub">品牌：</div>
+          <div class="labelSub">品牌：</div>
           <a-input placeholder="请输入品牌" class="input input3" allow-clear />
         </div>
         <div class="itemSub">
-          <div class="lableSub">清洁方式：</div>
+          <div class="labelSub">清洁方式：</div>
           <a-input
             placeholder="请输入清洁方式"
             class="input input3"
@@ -381,7 +381,7 @@
           />
         </div>
         <div class="itemSub">
-          <div class="lableSub">维护方式：</div>
+          <div class="labelSub">维护方式：</div>
           <a-input
             placeholder="请输入维护方式"
             class="input input3"
@@ -411,7 +411,7 @@
         </div>
       </div>
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="text">商品卖点</div>
         </div>
         <a-textarea
@@ -445,7 +445,7 @@
         识别将于每日 06:00、20:00 进行两轮，预估识别时间为2小时。
       </a-alert>
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="text">商品详情图</div>
         </div>
         <a-upload
@@ -589,11 +589,11 @@
       </div>
       <div class="right">
         <div class="item">
-          <div class="lable">商品简称</div>
+          <div class="label">商品简称</div>
           <div class="value">{{ lineValue.name }}</div>
         </div>
         <div class="item">
-          <div class="lable">商品链接</div>
+          <div class="label">商品链接</div>
           <a-link
             :href="'https://item.taobao.com/item.htm?id=' + item.taobaoId"
             target="_blank"
@@ -605,7 +605,7 @@
           </a-link>
         </div>
         <div class="item">
-          <div class="lable">商品信息</div>
+          <div class="label">商品信息</div>
           <a-textarea
             v-model="lineValue.info"
             auto-size
@@ -741,7 +741,7 @@ export default {
     // 商品参数数组
     const shopParameters = reactive([
       {
-        lable: "",
+        label: "",
         value: "",
       },
     ]);
@@ -1544,7 +1544,7 @@ export default {
       &:last-child {
         margin-bottom: 0;
       }
-      .lable {
+      .label {
         color: var(--main-fontColor2);
         font-weight: bold;
         display: flex;
@@ -1589,7 +1589,7 @@ export default {
         align-items: center;
         justify-content: space-between;
         margin-bottom: 8px;
-        .lableSub {
+        .labelSub {
           width: 80px;
           color: var(--main-fontColor3);
         }
@@ -1743,7 +1743,7 @@ export default {
       &:last-child {
         margin-bottom: 0;
       }
-      .lable {
+      .label {
         color: var(--main-fontColor2);
         font-weight: bold;
         display: flex;
@@ -1950,7 +1950,7 @@ export default {
       .item {
         width: 100%;
         margin-bottom: 24px;
-        .lable {
+        .label {
           font-weight: bold;
           color: var(--main-fontColor2);
           margin-bottom: 4px;

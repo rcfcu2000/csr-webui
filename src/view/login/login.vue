@@ -73,7 +73,7 @@
         请填写您的店铺信息，之后可在“系统管理-店铺信息”中修改
       </div>
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="icon">*</div>
           <div class="text">店铺名称</div>
         </div>
@@ -85,7 +85,7 @@
         />
       </div>
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="icon">*</div>
           <div class="text">店铺昵称</div>
         </div>
@@ -96,7 +96,7 @@
         />
       </div>
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="icon">*</div>
           <div class="text">主营类目</div>
         </div>
@@ -109,7 +109,7 @@
         />
       </div>
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="text">具体经营商品类型</div>
         </div>
         <a-input-tag
@@ -122,7 +122,7 @@
         />
       </div>
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="text">品牌理念</div>
         </div>
         <a-textarea
@@ -134,7 +134,7 @@
         />
       </div>
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="text">核心卖点</div>
         </div>
         <a-textarea
@@ -485,7 +485,7 @@ export default {
     .item {
       width: 100%;
       margin-bottom: 24px;
-      .lable {
+      .label {
         color: var(--main-fontColor2);
         font-weight: bold;
         display: flex;

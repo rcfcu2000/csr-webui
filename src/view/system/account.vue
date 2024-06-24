@@ -135,7 +135,7 @@
     </template>
     <div class="content">
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="icon">*</div>
           <div class="text">原密码</div>
         </div>
@@ -146,7 +146,7 @@
         />
       </div>
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="icon">*</div>
           <div class="text">新密码</div>
         </div>
@@ -157,7 +157,7 @@
         />
       </div>
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="icon">*</div>
           <div class="text">确认新密码</div>
         </div>
@@ -177,7 +177,7 @@
     </template>
     <div class="content">
       <div class="item">
-        <div class="lable">
+        <div class="label">
           <div class="icon">*</div>
           <div class="text">选择所属角色</div>
         </div>
@@ -622,7 +622,7 @@ export default {
     .item {
       width: 100%;
       margin-bottom: 24px;
-      .lable {
+      .label {
         color: var(--main-fontColor2);
         font-weight: bold;
         display: flex;

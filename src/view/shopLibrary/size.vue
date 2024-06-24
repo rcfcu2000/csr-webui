@@ -22,12 +22,13 @@
         class="table"
       >
         <template #columns>
-          <a-table-column
-            title="对照表名称"
-            data-index="Question"
-          ></a-table-column>
-          <a-table-column title="类别" data-index="Answer"> </a-table-column>
-          <a-table-column title="绑定商品量" data-index="Answer">
+          <a-table-column title="对照表名称" data-index="name"></a-table-column>
+          <a-table-column title="类别" data-index="type">
+            <template #cell="{ record }">
+              <div>{{ record.category.Name }}</div>
+            </template>
+          </a-table-column>
+          <a-table-column title="绑定商品量" data-index="RefCount">
           </a-table-column>
           <a-table-column
             title="最后更新时间"
@@ -41,16 +42,13 @@
             :width="150"
           >
           </a-table-column>
-          <a-table-column title="状态" data-index="Status" :width="100">
+          <a-table-column title="自动回复" data-index="Status" :width="100">
             <template #cell="{ record }">
-              <div v-if="record.Status == 1" class="status">
-                <span style="background: #00b42a"></span>
-                正常
-              </div>
-              <div v-if="record.Status != 1" class="status">
-                <span style="background: #f53f3f"></span>
-                已停用
-              </div>
+              <a-switch
+                size="small"
+                v-model="record.Status"
+                @click="changeStatus(record)"
+              />
             </template>
           </a-table-column>
           <a-table-column title="操作" data-index="option" :width="200">
@@ -62,28 +60,15 @@
                 绑定商品
               </a-button>
               <a-popconfirm
-                content="停用后可重新启用，确认要停用吗？"
+                content="删除之后不可恢复，确定要删除吗？"
                 type="warning"
                 position="tr"
-                @ok="changeStatus(record)"
+                @ok="del(record)"
               >
-                <a-button
-                  type="text"
-                  class="btn"
-                  style="color: #ff1600"
-                  v-if="record.Status == 1"
-                >
-                  停用
+                <a-button type="text" class="btn" style="color: #ff1600">
+                  删除
                 </a-button>
               </a-popconfirm>
-              <a-button
-                type="text"
-                class="btn"
-                v-if="record.Status != 1"
-                @click="changeStatus(record)"
-              >
-                启用
-              </a-button>
             </template>
           </a-table-column>
         </template>
@@ -111,26 +96,26 @@
       <div class="top">
         <div class="item" style="margin-right: 240px">
           <div class="label">对照表名称</div>
-          <div class="value">修生款</div>
+          <div class="value">{{ lineValue.name }}</div>
         </div>
         <div class="item">
           <div class="label">类别</div>
-          <div class="value">女装</div>
+          <div class="value">{{ lineValue.category.Name }}</div>
         </div>
       </div>
       <div class="sizeTable">
         <div class="label">尺码值</div>
         <div class="value">
-          <template v-for="(item, index) in sizeTable" :key="index">
+          <template v-for="(item, index) in lineValue.SizeInfo" :key="index">
             <div class="tr">
               <div>{{ item.label }}</div>
               <div class="tdBox">
                 <template v-for="(item1, index1) in item.value" :key="index1">
                   <div class="td">
                     <!-- 现在的这个判断是基于写死的数据，之后扩展的话只需要把这个ifelse去掉，只使用 -->
-                    <div v-if="index == 0">{{ item1 }}</div>
+                    <div v-if="index == 0">{{ item1.size }}</div>
                     <a-input
-                      :default-value="item1"
+                      v-model="item1.size"
                       class="input"
                       placeholder="S/M/L/XL"
                       @blur="blurSize(index, index1, $event)"
@@ -162,7 +147,7 @@
         one-way
         @change="changeTransfer"
         :data="commodityData"
-        :default-value="selCommodityData"
+        :model-value="selCommodityData"
         :source-input-search-props="{
           placeholder: '搜索商品简称',
         }"
@@ -197,14 +182,14 @@
             <div class="left">
               <div class="text">绑定的商品</div>
             </div>
-            <div class="delLogo"><icon-delete /></div>
+            <icon-delete class="delLogo" @click="selCommodityData.length = 0" />
           </div>
         </template>
       </a-transfer>
     </div>
     <template #footer>
       <div class="footer">
-        <a-button class="sub" @click="sub">保存</a-button>
+        <a-button class="sub" @click="bindCommoditySub">保存</a-button>
         <a-button class="cancel" @click="configCommodityModal = false">
           取消
         </a-button>
@@ -216,7 +201,13 @@
 <script>
 import { ref, reactive, onMounted } from "vue";
 import { fuzzySearch, formDate } from "../../utils/public";
-import { getList, updateReply } from "../../api/reply/reply";
+import {
+  getList,
+  updateSize,
+  delSize,
+  sizeBindCommodity,
+  getSizeBindCommodity,
+} from "../../api/shopLibrary/size";
 import { Message } from "@arco-design/web-vue";
 import { getShopList } from "../../api/shopLibrary/shopList";
 
@@ -231,7 +222,7 @@ export default {
     // 商品数组
     const commodityData = reactive([]);
     // 选中的商品数组
-    const selCommodityData = reactive([1, 2, 3]);
+    const selCommodityData = reactive([]);
     //搜索参数
     const search = reactive({
       total: 0,
@@ -242,9 +233,10 @@ export default {
     // 选中的当行数据
     const lineValue = reactive({
       ID: "",
-      Question: "",
-      Answer: "",
+      name: "",
+      category: {},
       UpdatedBy: "",
+      SizeInfo: [],
       Status: "",
     });
     //表格数据
@@ -257,50 +249,15 @@ export default {
     const shopId = sessionStorage.getItem("userInfo")
       ? JSON.parse(sessionStorage.getItem("userInfo")).shopId
       : 0;
-    // 尺码表table
-    const sizeTable = reactive([
-      {
-        label: "体重/身高",
-        value: [
-          "小于100",
-          "101-105",
-          "106-110",
-          "111-115",
-          "116-120",
-          "121-125",
-          "126-130",
-          "大于130",
-        ],
-      },
-      {
-        label: "小于160cm",
-        value: ["", "", "", "", "", "", "", ""],
-      },
-      {
-        label: "160-165cm",
-        value: ["", "", "", "", "", "", "", ""],
-      },
-      {
-        label: "166-170cm",
-        value: ["", "", "", "", "", "", "", ""],
-      },
-      {
-        label: "170-175cm",
-        value: ["", "", "", "", "", "", "", ""],
-      },
-      {
-        label: "大于175cm",
-        value: ["", "", "", "", "", "", "", ""],
-      },
-    ]);
 
     // 方法
 
     // 编辑自动回复
     const edit = (item) => {
       lineValue.ID = item.ID;
-      lineValue.Question = item.Question;
-      lineValue.Answer = item.Answer;
+      lineValue.name = item.name;
+      lineValue.category = item.category;
+      lineValue.SizeInfo = JSON.parse(item.SizeInfo);
       lineValue.UpdatedBy = JSON.parse(
         sessionStorage.getItem("userInfo")
       ).userName;
@@ -310,54 +267,83 @@ export default {
     // 选中的商品数据
     const changeTransfer = (value) => {
       // value是选中的值的下标
+      console.log(value);
       selCommodityData.length = 0;
-      value.forEach((item) => {
-        selCommodityData.push(commodityData[item].value);
-      });
+      for (let i = 0; i < value.length; i++) {
+        for (let j = 0; j < commodityData.length; j++) {
+          if (value[i] == commodityData[j].value) {
+            selCommodityData.push(commodityData[j].value);
+          }
+        }
+      }
     };
     // 绑定商品-打开弹窗
     const bindCommodity = (item) => {
       lineValue.ID = item.ID;
-      configCommodityModal.value = true;
+      getSizeBindCommodityfN(item.ID);
     };
     // 修改自动回复状态
     const changeStatus = async (item) => {
       let params = {
         ID: item.ID,
-        Status: item.Status == 1 ? 0 : 1,
+        Status: item.Status ? 1 : 0,
       };
-      let res = await updateReply(params);
+      let res = await updateSize(params);
       if (res) {
         Message.success("修改成功");
-        getReplyList();
+        getSizeList();
       } else {
         Message.error("修改失败,请稍后重试");
       }
     };
-    // 保存修改
-    const sub = async () => {
+    // 绑定商品
+    const bindCommoditySub = async () => {
       // log的这个数组就是选中的商品数组
-      console.log(selCommodityData);
-
-      // let res = await updateReply(lineValue);
-      // if (res) {
-      //   Message.success("配置成功");
-      //   modal.value = false;
-      //   getReplyList();
-      // } else {
-      //   Message.error("配置失败,请稍后重试");
-      // }
+      let params = {
+        cloth_size_info_id: lineValue.ID,
+        merchant_ids: selCommodityData,
+      };
+      let res = await sizeBindCommodity(params);
+      if (res) {
+        Message.success("配置成功");
+        configCommodityModal.value = false;
+        getSizeList();
+      } else {
+        Message.error("配置失败,请稍后重试");
+      }
     };
     // 尺码表弹窗获取输入框内容
     const blurSize = (index, index1, item) => {
-      sizeTable[index].value[index1] = item.target._value;
+      lineValue.SizeInfo[index].value[index1].size = item.target._value;
     };
     // 保存尺码表配置
-    const subSize = () => {
-      console.log(sizeTable);
+    const subSize = async () => {
+      lineValue.SizeInfo = JSON.stringify(lineValue.SizeInfo);
+      let res = await updateSize(lineValue);
+      if (res) {
+        Message.success("修改成功");
+        modal.value = false;
+      } else {
+        Message.error("修改失败，请稍后重试");
+        modal.value = false;
+      }
     };
-    // 获取所有自动回复列表
-    const getReplyList = async () => {
+    // 删除当行尺码表
+    const del = async (item) => {
+      let params = {
+        ID: item.ID,
+      };
+      let res = await delSize(params);
+      if (res) {
+        Message.success("删除成功");
+        modal.value = false;
+      } else {
+        Message.error("删除失败，请稍后重试");
+        modal.value = false;
+      }
+    };
+    // 获取尺码列表
+    const getSizeList = async () => {
       tableData.length = 0;
       resArr.length = 0;
       let params = {
@@ -371,6 +357,7 @@ export default {
         resArr.push(...res.data.list);
         resArr.forEach((item) => {
           item.UpdateTime = formDate(item.UpdateTime, "2");
+          item.Status = item.Status == "1" ? true : false;
         });
         search.total = res.data.total;
         tableData.length = 0;
@@ -396,6 +383,20 @@ export default {
           };
           commodityData.push(list);
         });
+      }
+    };
+    // 获取绑定的商品列表
+    const getSizeBindCommodityfN = async (ID) => {
+      let params = {
+        ID,
+      };
+      let res = await getSizeBindCommodity(params);
+      if (res) {
+        selCommodityData.length = 0;
+        res.forEach((item) => {
+          selCommodityData.push(item.BizMerchantId);
+        });
+        configCommodityModal.value = true;
       }
     };
     // 列表搜索查询
@@ -443,10 +444,9 @@ export default {
     };
     onMounted(() => {
       getShop();
-      getReplyList();
+      getSizeList();
     });
     return {
-      sizeTable,
       selCommodityData,
       commodityData,
       shopId,
@@ -461,14 +461,16 @@ export default {
       subSize,
       bindCommodity,
       changeTransfer,
-      sub,
+      bindCommoditySub,
       changeStatus,
       edit,
-      getReplyList,
+      getSizeList,
       searchFn,
       changePageSize,
       changePage,
       getShop,
+      del,
+      getSizeBindCommodityfN,
     };
   },
 };

@@ -7,8 +7,6 @@
     <div class="menu">
       <a-menu
         :default-selected-keys="[defaultSelectedKeys]"
-        :auto-open="true"
-        :accordion="true"
         :auto-open-selected="true"
       >
         <template v-for="item in menuArr" :key="item.ID">
