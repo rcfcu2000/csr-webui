@@ -1,5 +1,5 @@
 <!-- 
-  自动回复管理
+  常用回复
  -->
  <template>
   <div class="general">
@@ -10,7 +10,7 @@
           <a-input-search
             placeholder="搜索关键字"
             class="input"
-            v-model="search.Question"
+            v-model="search.Answer"
             @press-enter="searchFn"
           />
         </div>
@@ -40,9 +40,9 @@
             width="200"
           >
           </a-table-column>
-          <a-table-column title="修改人" data-index="UpdatedBy" width="200">
+          <a-table-column title="修改人" data-index="UpdatedBy" width="120">
           </a-table-column>
-          <a-table-column title="状态" data-index="Status" width="200">
+          <a-table-column title="状态" data-index="Status" width="100">
             <template #cell="{ record }">
               <div v-if="record.Status == 1" class="status">
                 <span style="background: #00b42a"></span>
@@ -54,7 +54,7 @@
               </div>
             </template>
           </a-table-column>
-          <a-table-column title="操作" data-index="option" width="200">
+          <a-table-column title="操作" data-index="option" width="150">
             <template #cell="{ record }">
               <a-button type="text" class="btn" @click="edit(record)"
                 >配置</a-button
@@ -132,7 +132,7 @@
   </a-modal>
 </template>
   
-  <script>
+<script>
 import { ref, reactive, onMounted } from "vue";
 import { fuzzySearch, formDate } from "../../utils/public";
 import { getList, updateReply } from "../../api/reply/reply";
@@ -149,7 +149,7 @@ export default {
       total: 0,
       page: 1,
       pageSize: 20,
-      Question: "",
+      Answer: "",
     });
     // 选中的当行数据
     const lineValue = reactive({
@@ -239,10 +239,8 @@ export default {
     const searchFn = () => {
       tableData.length = 0;
       searchTableData.length = 0;
-      if (search.Question != "") {
-        searchTableData.push(
-          ...fuzzySearch(resArr, "Question", search.Question)
-        );
+      if (search.Answer != "") {
+        searchTableData.push(...fuzzySearch(resArr, "Answer", search.Answer));
         tableData.push(...searchTableData);
         if (searchTableData.length > 0) {
           changePageSize(search.pageSize);
@@ -300,7 +298,7 @@ export default {
   },
 };
 </script>
-  <style lang='scss' scoped>
+<style lang='scss' scoped>
 .general {
   width: 100%;
   height: 100%;
@@ -472,6 +470,7 @@ export default {
       }
       ::v-deep .arco-textarea {
         min-height: 300px;
+        resize: none;
         background-color: var(--main-backgroundColor);
         &:hover {
           background-color: var(--main-btnHoverColor);

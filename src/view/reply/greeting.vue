@@ -313,6 +313,7 @@ export default {
       ::v-deep .arco-textarea {
         width: 100%;
         height: 170px;
+        resize: none;
         background-color: var(--main-backgroundColor);
         &:hover {
           background-color: var(--main-btnHoverColor);

@@ -466,23 +466,23 @@ export default {
         width: 100%;
         height: 36px;
         line-height: 36px;
-        background-color: var(--main-backgroundColor) !important;
+        background-color: var(--main-backgroundColor);
       }
       ::v-deep .arco-select-view-single {
-        background-color: var(--main-backgroundColor) !important;
+        background-color: var(--main-backgroundColor);
       }
       ::v-deep .arco-select-view-single:hover {
-        background-color: var(--main-btnHoverColor) !important;
+        background-color: var(--main-btnHoverColor);
       }
       ::v-deep .arco-textarea {
-        height: 110px !important;
-        background-color: var(--main-backgroundColor) !important;
+        height: 110px;
+        background-color: var(--main-backgroundColor);
       }
       ::v-deep .arco-textarea:hover {
-        background-color: var(--main-btnHoverColor) !important;
+        background-color: var(--main-btnHoverColor);
       }
       ::v-deep .arco-input-wrapper:hover {
-        background-color: var(--main-btnHoverColor) !important;
+        background-color: var(--main-btnHoverColor);
       }
       ::v-deep .arco-form-item {
         display: block;

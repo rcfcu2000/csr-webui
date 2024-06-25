@@ -53,7 +53,7 @@
               </div>
             </template>
           </a-table-column>
-          <a-table-column title="操作" data-index="option">
+          <a-table-column title="操作" data-index="option" width="200">
             <template #cell="{ record }">
               <a-button
                 type="text"

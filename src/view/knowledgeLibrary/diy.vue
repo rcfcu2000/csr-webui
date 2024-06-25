@@ -993,12 +993,14 @@ export default {
       ::v-deep .arco-textarea {
         min-height: 300px;
         background-color: var(--main-backgroundColor);
+        resize: none;
         &:hover {
           background-color: var(--main-btnHoverColor);
         }
       }
       ::v-deep .arco-textarea-wrapper {
         background-color: var(--main-btnHoverColor);
+        border: none;
       }
       ::v-deep .arco-select-view-single {
         margin-top: 8px;

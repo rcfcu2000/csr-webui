@@ -40,7 +40,7 @@
             title="创建时间"
             data-index="CreatedAt"
           ></a-table-column>
-          <a-table-column title="操作" data-index="option">
+          <a-table-column title="操作" data-index="option" width="200">
             <template #cell="{ record }">
               <a-button
                 type="text"
