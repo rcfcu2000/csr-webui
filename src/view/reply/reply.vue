@@ -34,11 +34,15 @@
               <div v-else>{{ record.Answer }}</div>
             </template>
           </a-table-column>
-          <a-table-column title="最后更新时间" data-index="UpdateTime">
+          <a-table-column
+            title="最后更新时间"
+            data-index="UpdateTime"
+            width="200"
+          >
           </a-table-column>
-          <a-table-column title="修改人" data-index="UpdatedBy">
+          <a-table-column title="修改人" data-index="UpdatedBy" width="200">
           </a-table-column>
-          <a-table-column title="状态" data-index="Status">
+          <a-table-column title="状态" data-index="Status" width="200">
             <template #cell="{ record }">
               <div v-if="record.Status == 1" class="status">
                 <span style="background: #00b42a"></span>
@@ -50,7 +54,7 @@
               </div>
             </template>
           </a-table-column>
-          <a-table-column title="操作" data-index="option">
+          <a-table-column title="操作" data-index="option" width="200">
             <template #cell="{ record }">
               <a-button type="text" class="btn" @click="edit(record)"
                 >配置</a-button
@@ -475,6 +479,7 @@ export default {
       }
       ::v-deep .arco-textarea-wrapper {
         background-color: var(--main-btnHoverColor);
+        border: none;
       }
       ::v-deep .arco-select-view-single {
         margin-top: 8px;

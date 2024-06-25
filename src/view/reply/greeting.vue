@@ -318,6 +318,9 @@ export default {
           background-color: var(--main-btnHoverColor);
         }
       }
+      ::v-deep .arco-textarea-wrapper{
+        border: none;
+      }
       .value {
         height: 36px;
         ::v-deep .arco-picker {

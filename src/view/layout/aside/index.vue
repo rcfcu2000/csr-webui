@@ -45,6 +45,7 @@
         position="rb"
         okText="退出"
         @ok="loginOut"
+        v-if="authorityId == '888'"
       >
         <div class="icon-logout"></div>
       </a-popconfirm>
@@ -79,6 +80,10 @@ export default {
         ? store.state.selMenu.son.ID
         : store.state.selMenu.parent.ID
     );
+    // 登陆人权限
+    const authorityId = sessionStorage.getItem("userInfo")
+      ? JSON.parse(sessionStorage.getItem("userInfo")).authorityId
+      : 0;
     // 初始化router
     const router = useRouter();
 
@@ -117,6 +122,7 @@ export default {
       router.push("login");
     };
     return {
+      authorityId,
       name,
       businessName,
       defaultSelectedKeys,
@@ -221,11 +227,12 @@ export default {
     .icon-logout {
       width: 20px;
       height: 20px;
-      padding: 4px;
+      line-height: 20px;
       position: absolute;
       right: 24px;
       bottom: 8px;
       cursor: pointer;
+      text-align: center;
       &:hover {
         color: var(--main-btnBackgroundColor);
         background-color: #e7f0ff;
