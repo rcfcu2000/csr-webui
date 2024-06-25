@@ -40,6 +40,14 @@
       <div class="title">当前登录</div>
       <div class="name">{{ name }}</div>
       <div class="businessName">{{ businessName }}</div>
+      <a-popconfirm
+        content="确定要退出登录吗？"
+        position="rb"
+        okText="退出"
+        @ok="loginOut"
+      >
+        <div class="icon-logout"></div>
+      </a-popconfirm>
     </div>
   </div>
 </template>
@@ -103,6 +111,11 @@ export default {
         });
       }
     };
+    // 退出登录
+    const loginOut = () => {
+      sessionStorage.clear();
+      router.push("login");
+    };
     return {
       name,
       businessName,
@@ -110,6 +123,7 @@ export default {
       menuArr,
       toPage,
       findNodeAndParentName,
+      loginOut,
     };
   },
 };
@@ -203,6 +217,19 @@ export default {
     }
     .businessName {
       color: var(--main-fontColor2);
+    }
+    .icon-logout {
+      width: 20px;
+      height: 20px;
+      padding: 4px;
+      position: absolute;
+      right: 24px;
+      bottom: 8px;
+      cursor: pointer;
+      &:hover {
+        color: var(--main-btnBackgroundColor);
+        background-color: #e7f0ff;
+      }
     }
   }
 }

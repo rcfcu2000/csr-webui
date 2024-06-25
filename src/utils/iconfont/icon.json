@@ -109,6 +109,13 @@
       "font_class": "store_knowledge",
       "unicode": "ea0f",
       "unicode_decimal": "59919"
+    },
+    {
+      "icon_id": "152063",
+      "name": "退出登录",
+      "font_class": "logout",
+      "unicode": "ea10",
+      "unicode_decimal": "59920"
     }
   ]
 }

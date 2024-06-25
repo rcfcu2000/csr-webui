@@ -118,7 +118,7 @@
                       v-model="item1.size"
                       class="input"
                       placeholder="S/M/L/XL"
-                      @blur="blurSize(index, index1, $event)"
+                      @blur="blurSize(index, index1, item1)"
                       v-else
                     />
                   </div>
@@ -314,7 +314,23 @@ export default {
     };
     // 尺码表弹窗获取输入框内容
     const blurSize = (index, index1, item) => {
-      lineValue.SizeInfo[index].value[index1].size = item.target._value;
+      // 转换为小写以便不区分大小写进行比较
+      const lowerCaseSize = item.size.toLowerCase();
+
+      // 检查字符串是否是"s"、"m"、"l"或"xl"
+      if (
+        lowerCaseSize === "s" ||
+        lowerCaseSize === "m" ||
+        lowerCaseSize === "l" ||
+        lowerCaseSize === "xl"
+      ) {
+        // 如果是，则返回大写形式
+        lineValue.SizeInfo[index].value[index1].size = item.size.toUpperCase();
+      } else if (item.size != "") {
+        // 如果不是，则返回空字符串
+        Message.error("请输入s,m,l,xl");
+        item.size = "";
+      }
     };
     // 保存尺码表配置
     const subSize = async () => {

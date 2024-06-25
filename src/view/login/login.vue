@@ -373,10 +373,12 @@ export default {
         menu();
       }
       if (localStorage.getItem("isPassWord") == "true") {
-        isPassword.value = localStorage.getItem("isPassWord");
+        isPassword.value = true;
         let list = JSON.parse(localStorage.getItem("accountAndPassWord"));
         form.name = list.name;
         form.password = list.password;
+      }else{
+        isPassword.value = false;
       }
     });
     return {
